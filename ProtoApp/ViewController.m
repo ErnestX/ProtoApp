@@ -16,6 +16,16 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.view.backgroundColor = [UIColor yellowColor];
+    
+    UILabel *lblTest = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 200.0)];
+    lblTest.text = @"TEST";
+    lblTest.font = [UIFont fontWithName:@"helvetica" size:50.0];
+    lblTest.textAlignment = NSTextAlignmentCenter;
+    lblTest.textColor = [UIColor darkTextColor];
+    
+    [self.view addSubview:lblTest];
+    
     // Do any additional setup after loading the view, typically from a nib.
 }
 
