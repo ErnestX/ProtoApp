@@ -346,6 +346,7 @@
 				INFOPLIST_FILE = ProtoApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Debug;
 		};
@@ -356,6 +357,7 @@
 				INFOPLIST_FILE = ProtoApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Release;
 		};
@@ -412,6 +414,7 @@
 				CA027BEA1AF82A5A00D2D9F6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		CA027BEB1AF82A5A00D2D9F6 /* Build configuration list for PBXNativeTarget "ProtoAppTests" */ = {
 			isa = XCConfigurationList;
@@ -420,6 +423,7 @@
 				CA027BED1AF82A5A00D2D9F6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
