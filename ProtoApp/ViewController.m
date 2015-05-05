@@ -19,6 +19,7 @@
     StatusView* statusView;
     GameView* gameView;
     float STATUS_VIEW_HEIGHT;
+    BOOL TEAM;
 }
 
 - (void) customInit
@@ -32,7 +33,7 @@
     [self customInit];
     
     statusView = [[StatusView alloc]initWithFrame:CGRectMake(0, 0, [self getScreenWidth], STATUS_VIEW_HEIGHT)];
-    gameView = [[GameView alloc]initWithFrame:CGRectMake(0, STATUS_VIEW_HEIGHT, [self getScreenWidth], [self getScreenHeight] - STATUS_VIEW_HEIGHT)];
+    gameView = [[GameView alloc]initWithFrame:CGRectMake(0, STATUS_VIEW_HEIGHT, [self getScreenWidth], [self getGameViewHeight])];
     
     [self.view addSubview:statusView];
     [self.view addSubview:gameView];
@@ -42,6 +43,14 @@
     [self testRequest];
 }
 
+#pragma mark - Actions
+- (void) putInTeam:(BOOL)isInTeamOne
+{
+    TEAM = isInTeamOne;
+    [self transitFromComfirmationToTeamAssignmentLayout];
+}
+
+#pragma mark - Layouts
 
 - (void) setUpReadyComfirmationLayout
 {
@@ -51,6 +60,18 @@
     switchLabel.textColor = [UIColor whiteColor];
     [comfirmationSwitch addSubview:switchLabel];
     [gameView addSubview:comfirmationSwitch];
+    
+    // just for testing
+    UIButton* b1 = [UIButton buttonWithType:UIButtonTypeSystem];
+    [b1 setTitle: @"team1" forState:UIControlStateNormal];
+    b1.frame = CGRectMake([self getScreenWidth] - 150, [self getGameViewHeight] - 40, 70, 50);
+    [b1 addTarget:self action:@selector(putInTeamOne) forControlEvents:UIControlEventTouchUpInside];
+    UIButton* b2 = [UIButton buttonWithType:UIButtonTypeSystem];
+    [b2 setTitle: @"team2" forState:UIControlStateNormal];
+    b2.frame = CGRectMake([self getScreenWidth] - 80, [self getGameViewHeight] - 40, 70, 50);
+    [b2 addTarget:self action:@selector(putInTeamTwo) forControlEvents:UIControlEventTouchUpInside];
+    [gameView addSubview:b1];
+    [gameView addSubview:b2];
 }
 
 - (void) transitFromComfirmationToTeamAssignmentLayout
@@ -114,7 +135,7 @@
     
 }
 
-# pragma mark - Transition Helpers
+#pragma mark - Transition Helpers
 
 /*
  remove all subviews form gameView
@@ -124,7 +145,12 @@
    //stub
 }
 
-# pragma mark - Getters
+#pragma mark - Getters
+
+- (float) getGameViewHeight
+{
+    return [self getScreenHeight] - STATUS_VIEW_HEIGHT;
+}
 
 - (float) getScreenHeight
 {
@@ -156,6 +182,17 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Methods For Testing
+- (void) putInTeamOne
+{
+    [self putInTeam:true];
+}
+
+- (void) putInTeamTwo
+{
+    [self putInTeam:false];
 }
 
 @end
