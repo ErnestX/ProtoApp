@@ -13,8 +13,19 @@
 
 @interface
 
-- (void) sendColorPickenByCaptain: (Colors)c;
+/*
+ indicate that the player is ready to go
+ */
+- (void) readyToStartGame;
 
-- (void) sendIndividualScore: (NSInteger)s;
+/*
+ returns false if the player is not the captain
+ */
+- (BOOL) sendColorPickenByCaptain: (Colors)c;
+
+/*
+ returns false if not in the defending team
+ */
+- (BOOL) sendPlayerScore: (NSInteger)s;
 
 #endif

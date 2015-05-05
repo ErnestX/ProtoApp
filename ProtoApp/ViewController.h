@@ -14,7 +14,8 @@
 - (void) putInTeam: (BOOL)isInTeamOne;
 
 /*
- returns false if not assigned a team yet
+ Starts new round. Starts a new game if this is the first round
+ Returns false if not assigned a team yet
  */
 - (BOOL) startNewRound;
 
@@ -23,9 +24,20 @@
  */
 - (BOOL) assignRole: (BOOL)isCaptain;
 
+/*
+ returns false if not in the defending team
+ */
 - (BOOL) setQuestionAndStartTimer: (Colors)question;
 
-- (void) increaseScoreBy: (NSInteger)s;
+/*
+ returns false if not in the offending team
+ */
+- (BOOL) increaseMyScoreBy: (NSInteger)s;
+
+/*
+ returns false if not in the defending team
+ */
+- (BOOL) increaseTheirScoreBy: (NSInteger)s;
 
 /*
  returns false if not assigned to any team
@@ -36,6 +48,8 @@
  returns false if not in offending team
  */
 - (BOOL) isCaptain;
+
+- (void) endGame;
 
 @end
 
