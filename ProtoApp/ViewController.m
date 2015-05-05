@@ -33,7 +33,7 @@
 }
 
 - (void) connectMyself {
-    NSString *path = @"http://localhost:8080/ProtoApp/MyServlet";
+    NSString *path = @"http://localhost:8080/ProtoApp/ConnectServlet";
     
     AFHTTPRequestOperationManager *mgr = [AFHTTPRequestOperationManager manager];
     NSString *uid = [[UIDevice currentDevice] identifierForVendor].UUIDString;
