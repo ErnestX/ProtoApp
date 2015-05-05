@@ -24,9 +24,31 @@
     lblTest.textAlignment = NSTextAlignmentCenter;
     lblTest.textColor = [UIColor darkTextColor];
     
+    
     [self.view addSubview:lblTest];
     
+    [self testRequest];
+
+    
+    
     // Do any additional setup after loading the view, typically from a nib.
+}
+
+- (void) testRequest {
+    NSString *path = @"http://localhost:8080/ProtoApp/MyServlet";
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:path]];
+    [request setHTTPMethod:@"GET"];
+    [NSURLConnection sendAsynchronousRequest:request
+                                       queue:[[NSOperationQueue alloc] init]
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+                               if (connectionError || !data){
+                                   NSLog(@"error occurred !!!!");
+                               } else {
+//                                   NSString *str = [NSString stringWithFormat:@"key: %@ value: %@", response.];
+
+                               }
+                           }];
+    
 }
 
 - (void)didReceiveMemoryWarning {
