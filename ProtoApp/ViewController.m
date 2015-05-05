@@ -24,30 +24,43 @@
     lblTest.textAlignment = NSTextAlignmentCenter;
     lblTest.textColor = [UIColor darkTextColor];
     
-    
     [self.view addSubview:lblTest];
     
-    [self testRequest];
-
+    [self connectMyself];
     
     
     // Do any additional setup after loading the view, typically from a nib.
 }
 
-- (void) testRequest {
+- (void) connectMyself {
     NSString *path = @"http://localhost:8080/ProtoApp/MyServlet";
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:path]];
-    [request setHTTPMethod:@"GET"];
-    [NSURLConnection sendAsynchronousRequest:request
-                                       queue:[[NSOperationQueue alloc] init]
-                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
-                               if (connectionError || !data){
-                                   NSLog(@"error occurred !!!!");
-                               } else {
-//                                   NSString *str = [NSString stringWithFormat:@"key: %@ value: %@", response.];
-
-                               }
-                           }];
+    
+    AFHTTPRequestOperationManager *mgr = [AFHTTPRequestOperationManager manager];
+    NSString *uid = [[UIDevice currentDevice] identifierForVendor].UUIDString;
+    NSDictionary *params = @{@"uid" : uid};
+    [mgr POST:path
+   parameters:params
+      success:^(AFHTTPRequestOperation *operation, id responseObject) {
+          NSLog(@"connect myself successful");
+      }
+      failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+          NSLog(@"error code: %ld", (long)error.code);
+      }];
+    
+    
+    
+//    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:path]];
+//    [request setHTTPMethod:@"GET"];
+//    [NSURLConnection sendAsynchronousRequest:request
+//                                       queue:[[NSOperationQueue alloc] init]
+//                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+//                               if (connectionError || !data){
+//                                   NSLog(@"error occurred !!!!");
+//                               } else {
+//
+//
+//                               }
+//                           }];
     
 }
 
