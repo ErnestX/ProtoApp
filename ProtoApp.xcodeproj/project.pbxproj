@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		856A8A886B1E60E13BD97DCB /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A9D81FD24FA38525E413A666 /* libPods.a */; };
 		CA027BCB1AF82A5A00D2D9F6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CA027BCA1AF82A5A00D2D9F6 /* main.m */; };
 		CA027BCE1AF82A5A00D2D9F6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CA027BCD1AF82A5A00D2D9F6 /* AppDelegate.m */; };
 		CA027BD11AF82A5A00D2D9F6 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CA027BD01AF82A5A00D2D9F6 /* ViewController.m */; };
@@ -25,6 +26,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A25EDA785B1DF41E0FDC2C93 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		A9D81FD24FA38525E413A666 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA027BC51AF82A5A00D2D9F6 /* ProtoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProtoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA027BC91AF82A5A00D2D9F6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CA027BCA1AF82A5A00D2D9F6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -38,6 +41,7 @@
 		CA027BE41AF82A5A00D2D9F6 /* ProtoAppTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProtoAppTests.m; sourceTree = "<group>"; };
 		CA027BF31AF92BE600D2D9F6 /* ColorsEnumType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ColorsEnumType.h; sourceTree = "<group>"; };
 		CA027BF41AF9304700D2D9F6 /* Network.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Network.h; sourceTree = "<group>"; };
+		FEA4EDF1D21035A981BF86B0 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,6 +49,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				856A8A886B1E60E13BD97DCB /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -58,12 +63,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B48193B5558381B2A8C33D1A /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				A25EDA785B1DF41E0FDC2C93 /* Pods.debug.xcconfig */,
+				FEA4EDF1D21035A981BF86B0 /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		CA027BBC1AF82A5A00D2D9F6 = {
 			isa = PBXGroup;
 			children = (
 				CA027BC71AF82A5A00D2D9F6 /* ProtoApp */,
 				CA027BE11AF82A5A00D2D9F6 /* ProtoAppTests */,
 				CA027BC61AF82A5A00D2D9F6 /* Products */,
+				B48193B5558381B2A8C33D1A /* Pods */,
+				E9DECB3008C8B553153A988D /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -117,6 +133,14 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		E9DECB3008C8B553153A988D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A9D81FD24FA38525E413A666 /* libPods.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -124,9 +148,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CA027BE81AF82A5A00D2D9F6 /* Build configuration list for PBXNativeTarget "ProtoApp" */;
 			buildPhases = (
+				EA1BA4D596A15AC61E29E0B4 /* Check Pods Manifest.lock */,
 				CA027BC11AF82A5A00D2D9F6 /* Sources */,
 				CA027BC21AF82A5A00D2D9F6 /* Frameworks */,
 				CA027BC31AF82A5A00D2D9F6 /* Resources */,
+				A6D64068E044DCAB1C8BDD2D /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -209,6 +235,39 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		A6D64068E044DCAB1C8BDD2D /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EA1BA4D596A15AC61E29E0B4 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		CA027BC11AF82A5A00D2D9F6 /* Sources */ = {
@@ -318,6 +377,7 @@
 		};
 		CA027BE91AF82A5A00D2D9F6 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A25EDA785B1DF41E0FDC2C93 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = ProtoApp/Info.plist;
@@ -329,6 +389,7 @@
 		};
 		CA027BEA1AF82A5A00D2D9F6 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FEA4EDF1D21035A981BF86B0 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = ProtoApp/Info.plist;
