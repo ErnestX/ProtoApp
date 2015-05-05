@@ -11,7 +11,6 @@
 		CA027BCE1AF82A5A00D2D9F6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CA027BCD1AF82A5A00D2D9F6 /* AppDelegate.m */; };
 		CA027BD11AF82A5A00D2D9F6 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CA027BD01AF82A5A00D2D9F6 /* ViewController.m */; };
 		CA027BD61AF82A5A00D2D9F6 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CA027BD51AF82A5A00D2D9F6 /* Images.xcassets */; };
-		CA027BD91AF82A5A00D2D9F6 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = CA027BD71AF82A5A00D2D9F6 /* LaunchScreen.xib */; };
 		CA027BE51AF82A5A00D2D9F6 /* ProtoAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CA027BE41AF82A5A00D2D9F6 /* ProtoAppTests.m */; };
 /* End PBXBuildFile section */
 
@@ -34,10 +33,11 @@
 		CA027BCF1AF82A5A00D2D9F6 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		CA027BD01AF82A5A00D2D9F6 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		CA027BD51AF82A5A00D2D9F6 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		CA027BD81AF82A5A00D2D9F6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		CA027BDE1AF82A5A00D2D9F6 /* ProtoAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProtoAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA027BE31AF82A5A00D2D9F6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CA027BE41AF82A5A00D2D9F6 /* ProtoAppTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProtoAppTests.m; sourceTree = "<group>"; };
+		CA027BF31AF92BE600D2D9F6 /* ColorsEnumType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ColorsEnumType.h; sourceTree = "<group>"; };
+		CA027BF41AF9304700D2D9F6 /* Network.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Network.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,8 +83,9 @@
 				CA027BCD1AF82A5A00D2D9F6 /* AppDelegate.m */,
 				CA027BCF1AF82A5A00D2D9F6 /* ViewController.h */,
 				CA027BD01AF82A5A00D2D9F6 /* ViewController.m */,
+				CA027BF31AF92BE600D2D9F6 /* ColorsEnumType.h */,
+				CA027BF41AF9304700D2D9F6 /* Network.h */,
 				CA027BD51AF82A5A00D2D9F6 /* Images.xcassets */,
-				CA027BD71AF82A5A00D2D9F6 /* LaunchScreen.xib */,
 				CA027BC81AF82A5A00D2D9F6 /* Supporting Files */,
 			);
 			path = ProtoApp;
@@ -196,7 +197,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CA027BD91AF82A5A00D2D9F6 /* LaunchScreen.xib in Resources */,
 				CA027BD61AF82A5A00D2D9F6 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -238,17 +238,6 @@
 			targetProxy = CA027BDF1AF82A5A00D2D9F6 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		CA027BD71AF82A5A00D2D9F6 /* LaunchScreen.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				CA027BD81AF82A5A00D2D9F6 /* Base */,
-			);
-			name = LaunchScreen.xib;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		CA027BE61AF82A5A00D2D9F6 /* Debug */ = {
