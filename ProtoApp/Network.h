@@ -11,8 +11,6 @@
 #import <UIKit/UIKit.h>
 #import "ColorsEnumType.h"
 
-@interface
-
 /*
  indicate that the player is ready to go
  */

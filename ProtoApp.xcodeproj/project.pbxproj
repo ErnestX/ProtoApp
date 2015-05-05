@@ -13,6 +13,13 @@
 		CA027BD11AF82A5A00D2D9F6 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CA027BD01AF82A5A00D2D9F6 /* ViewController.m */; };
 		CA027BD61AF82A5A00D2D9F6 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CA027BD51AF82A5A00D2D9F6 /* Images.xcassets */; };
 		CA027BE51AF82A5A00D2D9F6 /* ProtoAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CA027BE41AF82A5A00D2D9F6 /* ProtoAppTests.m */; };
+		CA027BF71AF948F000D2D9F6 /* TeamView.m in Sources */ = {isa = PBXBuildFile; fileRef = CA027BF61AF948F000D2D9F6 /* TeamView.m */; };
+		CA027BFB1AF94B7800D2D9F6 /* CaptainColorPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = CA027BFA1AF94B7800D2D9F6 /* CaptainColorPickerView.m */; };
+		CA027BFE1AF94BC700D2D9F6 /* RoleView.m in Sources */ = {isa = PBXBuildFile; fileRef = CA027BFD1AF94BC700D2D9F6 /* RoleView.m */; };
+		CA027C011AF94BF700D2D9F6 /* ScoreView.m in Sources */ = {isa = PBXBuildFile; fileRef = CA027C001AF94BF700D2D9F6 /* ScoreView.m */; };
+		CA027C041AF94C2100D2D9F6 /* StatusView.m in Sources */ = {isa = PBXBuildFile; fileRef = CA027C031AF94C2100D2D9F6 /* StatusView.m */; };
+		CA027C071AF94C5900D2D9F6 /* QuestionAndAnswerView.m in Sources */ = {isa = PBXBuildFile; fileRef = CA027C061AF94C5900D2D9F6 /* QuestionAndAnswerView.m */; };
+		CA027C0A1AF95EF200D2D9F6 /* GameView.m in Sources */ = {isa = PBXBuildFile; fileRef = CA027C091AF95EF200D2D9F6 /* GameView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,6 +48,20 @@
 		CA027BE41AF82A5A00D2D9F6 /* ProtoAppTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProtoAppTests.m; sourceTree = "<group>"; };
 		CA027BF31AF92BE600D2D9F6 /* ColorsEnumType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ColorsEnumType.h; sourceTree = "<group>"; };
 		CA027BF41AF9304700D2D9F6 /* Network.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Network.h; sourceTree = "<group>"; };
+		CA027BF51AF948F000D2D9F6 /* TeamView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TeamView.h; sourceTree = "<group>"; };
+		CA027BF61AF948F000D2D9F6 /* TeamView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TeamView.m; sourceTree = "<group>"; };
+		CA027BF91AF94B7800D2D9F6 /* CaptainColorPickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CaptainColorPickerView.h; sourceTree = "<group>"; };
+		CA027BFA1AF94B7800D2D9F6 /* CaptainColorPickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CaptainColorPickerView.m; sourceTree = "<group>"; };
+		CA027BFC1AF94BC700D2D9F6 /* RoleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RoleView.h; sourceTree = "<group>"; };
+		CA027BFD1AF94BC700D2D9F6 /* RoleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RoleView.m; sourceTree = "<group>"; };
+		CA027BFF1AF94BF700D2D9F6 /* ScoreView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScoreView.h; sourceTree = "<group>"; };
+		CA027C001AF94BF700D2D9F6 /* ScoreView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScoreView.m; sourceTree = "<group>"; };
+		CA027C021AF94C2100D2D9F6 /* StatusView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatusView.h; sourceTree = "<group>"; };
+		CA027C031AF94C2100D2D9F6 /* StatusView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatusView.m; sourceTree = "<group>"; };
+		CA027C051AF94C5900D2D9F6 /* QuestionAndAnswerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuestionAndAnswerView.h; sourceTree = "<group>"; };
+		CA027C061AF94C5900D2D9F6 /* QuestionAndAnswerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuestionAndAnswerView.m; sourceTree = "<group>"; };
+		CA027C081AF95EF200D2D9F6 /* GameView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameView.h; sourceTree = "<group>"; };
+		CA027C091AF95EF200D2D9F6 /* GameView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameView.m; sourceTree = "<group>"; };
 		FEA4EDF1D21035A981BF86B0 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -101,6 +122,7 @@
 				CA027BD01AF82A5A00D2D9F6 /* ViewController.m */,
 				CA027BF31AF92BE600D2D9F6 /* ColorsEnumType.h */,
 				CA027BF41AF9304700D2D9F6 /* Network.h */,
+				CA027BF81AF94B3600D2D9F6 /* Views */,
 				CA027BD51AF82A5A00D2D9F6 /* Images.xcassets */,
 				CA027BC81AF82A5A00D2D9F6 /* Supporting Files */,
 			);
@@ -131,6 +153,27 @@
 				CA027BE31AF82A5A00D2D9F6 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		CA027BF81AF94B3600D2D9F6 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				CA027BF51AF948F000D2D9F6 /* TeamView.h */,
+				CA027BF61AF948F000D2D9F6 /* TeamView.m */,
+				CA027BFC1AF94BC700D2D9F6 /* RoleView.h */,
+				CA027BFD1AF94BC700D2D9F6 /* RoleView.m */,
+				CA027BFF1AF94BF700D2D9F6 /* ScoreView.h */,
+				CA027C001AF94BF700D2D9F6 /* ScoreView.m */,
+				CA027C021AF94C2100D2D9F6 /* StatusView.h */,
+				CA027C031AF94C2100D2D9F6 /* StatusView.m */,
+				CA027C081AF95EF200D2D9F6 /* GameView.h */,
+				CA027C091AF95EF200D2D9F6 /* GameView.m */,
+				CA027BF91AF94B7800D2D9F6 /* CaptainColorPickerView.h */,
+				CA027BFA1AF94B7800D2D9F6 /* CaptainColorPickerView.m */,
+				CA027C051AF94C5900D2D9F6 /* QuestionAndAnswerView.h */,
+				CA027C061AF94C5900D2D9F6 /* QuestionAndAnswerView.m */,
+			);
+			name = Views;
 			sourceTree = "<group>";
 		};
 		E9DECB3008C8B553153A988D /* Frameworks */ = {
@@ -276,6 +319,13 @@
 			files = (
 				CA027BD11AF82A5A00D2D9F6 /* ViewController.m in Sources */,
 				CA027BCE1AF82A5A00D2D9F6 /* AppDelegate.m in Sources */,
+				CA027C011AF94BF700D2D9F6 /* ScoreView.m in Sources */,
+				CA027BFB1AF94B7800D2D9F6 /* CaptainColorPickerView.m in Sources */,
+				CA027BF71AF948F000D2D9F6 /* TeamView.m in Sources */,
+				CA027C071AF94C5900D2D9F6 /* QuestionAndAnswerView.m in Sources */,
+				CA027C0A1AF95EF200D2D9F6 /* GameView.m in Sources */,
+				CA027BFE1AF94BC700D2D9F6 /* RoleView.m in Sources */,
+				CA027C041AF94C2100D2D9F6 /* StatusView.m in Sources */,
 				CA027BCB1AF82A5A00D2D9F6 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
