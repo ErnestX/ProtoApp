@@ -96,13 +96,13 @@
     tv.transform = CGAffineTransformMake(1, 0, 0, 1, [self getScreenWidth]/2 - 170, [self getGameViewHeight]/2 - 150);
     // add to GV for now
     [newGv addSubview:tv];
-    [self setNewGameViewPush:newGv];
+    [self setNewGameViewPush:newGv:tv];
 }
 
 /*
  @effect:add the newView as a subview and transit to it by pushing from right. gameView will be assigned to the newView in the end.
  */
-- (void) setNewGameViewPush:(GameView*) newView
+- (void) setNewGameViewPush:(GameView*) newView :(TeamView*)tv
 {
     // position the new view so that it's on the right of the old one.
     newView.frame = CGRectMake([self getScreenWidth], STATUS_VIEW_HEIGHT, newView.frame.size.width, newView.frame.size.height);
@@ -124,7 +124,7 @@
     
     [CATransaction begin];
     [CATransaction setCompletionBlock:^(void) {
-        [self animateTeamView];
+        [self animateTeamView:tv];
     }];
     [gameView.layer addAnimation:animation1 forKey:@"animation1"];
     [newView.layer addAnimation:animation2 forKey:@"animation2"];
@@ -135,9 +135,30 @@
     gameView = newView;
 }
 
-- (void) animateTeamView
+- (void) animateTeamView: (TeamView*)tv
 {
-    NSLog(@"testing");
+    CABasicAnimation *animaiton = [CABasicAnimation animation];
+    CGAffineTransform transform = CGAffineTransformMake(0.3, 0, 0, 0.3, -150, -160);
+    animaiton.keyPath = @"transform";
+    animaiton.fromValue = [NSValue valueWithCATransform3D:tv.layer.transform];
+    animaiton.toValue = [NSValue valueWithCATransform3D:CATransform3DMakeAffineTransform(transform)];
+    [animaiton setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+    [animaiton setBeginTime:CACurrentMediaTime()+1.0];
+    [CATransaction begin];
+    [CATransaction setCompletionBlock:^(void) {
+        [self setTeamView:tv];
+    }];
+    [tv.layer addAnimation:animaiton forKey:@"animation"];
+    [CATransaction commit];
+    
+    //tv.layer.transform = CATransform3DMakeAffineTransform(transform); //this will finish before the animation even begin due to the delay
+}
+
+- (void) setTeamView: (TeamView*)tv
+{
+    [tv removeFromSuperview];
+    tv.transform = CGAffineTransformMake(0.3, 0, 0, 0.3, -150, -60);
+    [statusView addSubview:tv];
 }
 
 - (void) transitFromTeamAssignmentToNewTurnLayout
