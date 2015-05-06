@@ -21,6 +21,7 @@
     StatusView* statusView;
     GameView* gameView;
     BOOL TEAM;
+    NSInteger turn;
 }
 
 - (void)viewDidLoad {
@@ -87,38 +88,30 @@
     GameView* newGv = [[GameView alloc]customInit];
     TeamView* tv = [[TeamView alloc]customInitWithTeam:isInTeamOne];
     
-    tv.transform = CGAffineTransformMake(1, 0, 0, 1, [self getScreenWidth]/2 - 170, [self getGameViewHeight]/2 - 150);
+    tv.transform = CGAffineTransformMake(1, 0, 0, 1, [self getScreenWidth]/2 - 160, [self getGameViewHeight]/2 - 150);
     // add to GV for now
     [statusView addSubview:tv];
-    [self setNewGameViewPush:newGv:tv:^(void) {
+    [self setNewGameViewPushAnimation:newGv additionalView:tv completionBlock:^(void) {
         [gameView removeFromSuperview];
         gameView = newGv;
-        [self transformViewAnimated:tv endTransform:CGAffineTransformMake(0.3, 0, 0, 0.3, -150, -50) completionBlock:^(void){}];
+        [self transformViewAnimated:tv endTransform:CGAffineTransformMake(0.3, 0, 0, 0.3, -150, -50) completionBlock:^(void){
+            [self transitFromTeamAssignmentToNewTurnLayout];}];
     }];
 }
-
-//- (void) setTeamView: (TeamView*)tv
-//{
-//    [tv removeFromSuperview];
-//    tv.transform = CGAffineTransformMake(0.3, 0, 0, 0.3, -150, -60);
-//    [statusView addSubview:tv];
-//    
-//    [self transitFromTeamAssignmentToNewTurnLayout];
-//}
 
 #pragma mark NewTurn
 
 - (void) transitFromTeamAssignmentToNewTurnLayout
 {
-    GameView* newGv = [[GameView alloc]customInit];
-    UILabel* l = [[UILabel alloc]initWithFrame:CGRectMake([GlobalGetters getScreenWidth]/2 - 120, [GlobalGetters getGameViewHeight]/2 - 100, 500, 100)];
+    UILabel* l = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 500, 200)];
+    l.transform = CGAffineTransformMake(1, 0, 0, 1, [self getScreenWidth]/2 - 160, [self getGameViewHeight]/2 - 150);
     l.font = [l.font fontWithSize:100.0];
     l.text = @"Turn 1"; // TODO: dynamilize this
     l.textColor = [UIColor whiteColor];
-    [newGv addSubview:l];
-    
-//    [self setNewGameViewPush:newGv :^(void){
-//    }];
+    [statusView addSubview:l];
+    [self setNewGameViewPushAnimation:NULL additionalView:l completionBlock:^(void){
+        [self transformViewAnimated:l endTransform:CGAffineTransformMake(0.3, 0, 0, 0.3, -20, -50) completionBlock:^(void){}];
+    }];
 }
 
 /*
@@ -176,9 +169,9 @@
 
 
 /*
- @effect:add the newView as a subview and transit to it by pushing from right. gameView will be assigned to the newView in the end.
+ Do not remove the old view or reassign gameView. Do those in the completion block
  */
-- (void) setNewGameViewPush:(GameView*) newGameView :(UIView*) otherView :(void (^)(void))completionBlock
+- (void) setNewGameViewPushAnimation:(GameView*) newGameView additionalView:(UIView*)otherView completionBlock:(void (^)(void))completionBlock
 {
     [self.view insertSubview:newGameView atIndex:0]; // put at buttom
     
