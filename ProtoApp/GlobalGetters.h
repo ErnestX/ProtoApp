@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Utilities : NSObject
+@interface GlobalGetters : NSObject
 
 + (float)getStatusViewHeight;
 + (float)getScreenHeight;

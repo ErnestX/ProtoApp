@@ -6,10 +6,10 @@
 //  Copyright (c) 2015 ElementsLab. All rights reserved.
 //
 
-#import "Utilities.h"
+#import "GlobalGetters.h"
 #import <UIKit/UIKit.h>
 
-@implementation Utilities
+@implementation GlobalGetters
 
 + (float)getStatusViewHeight
 {

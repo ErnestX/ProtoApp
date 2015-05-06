@@ -10,6 +10,7 @@
 #import "StatusView.h"
 #import "GameView.h"
 #import "TeamView.h"
+#import "GlobalGetters.h"
 
 @interface ViewController ()
 
@@ -20,18 +21,10 @@
     StatusView* statusView;
     GameView* gameView;
     BOOL TEAM;
-    float STATUS_VIEW_HEIGHT;
-}
-
-- (void) customInit
-{
-    STATUS_VIEW_HEIGHT = 100;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    [self customInit];
     
     statusView = [[StatusView alloc]customInit];
     gameView = [[GameView alloc]customInit];
@@ -57,7 +50,7 @@
 
 - (void) setUpReadyComfirmationLayout
 {
-    UISwitch* comfirmationSwitch = [[UISwitch alloc]initWithFrame:CGRectMake([self getScreenWidth]/2 - 10, [self getScreenHeight]/2 - STATUS_VIEW_HEIGHT, 20, 20)];
+    UISwitch* comfirmationSwitch = [[UISwitch alloc]initWithFrame:CGRectMake([self getScreenWidth]/2 - 10, [self getScreenHeight]/2 - [GlobalGetters getStatusViewHeight], 20, 20)];
     [comfirmationSwitch addTarget:self action:@selector(comfirmationSwitchOn:) forControlEvents:UIControlEventValueChanged];
     
     UILabel* switchLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 40, 100, 20)];
@@ -192,7 +185,7 @@
 - (void) setNewGameViewPush:(GameView*) newView :(void (^)(void))completionBlock
 {
     // position the new view so that it's on the right of the old one.
-    newView.frame = CGRectMake([self getScreenWidth], STATUS_VIEW_HEIGHT, newView.frame.size.width, newView.frame.size.height);
+    newView.frame = CGRectMake([self getScreenWidth], [GlobalGetters getStatusViewHeight], newView.frame.size.width, newView.frame.size.height);
     
     [self.view addSubview:newView];
     

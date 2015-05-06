@@ -7,7 +7,7 @@
 //
 
 #import "StatusView.h"
-#import "Utilities.h"
+#import "GlobalGetters.h"
 
 @implementation StatusView
 
@@ -20,7 +20,7 @@
 
 - (id) customInit
 {
-    return [self initWithFrame:CGRectMake(0, 0, [Utilities getScreenWidth], [Utilities getStatusViewHeight])];
+    return [self initWithFrame:CGRectMake(0, 0, [GlobalGetters getScreenWidth], [GlobalGetters getStatusViewHeight])];
 }
 
 - (void) drawRect:(CGRect)rect
