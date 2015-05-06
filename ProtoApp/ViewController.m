@@ -112,6 +112,7 @@
         ((UISwitch*)sender).enabled = FALSE;
         NSLog(@"ready");
         // TODO: call readyToStartGame
+        [self connectMyself];
     }
 }
 
@@ -339,21 +340,6 @@
       failure:^(AFHTTPRequestOperation *operation, NSError *error) {
           NSLog(@"error code: %ld", (long)error.code);
       }];
-    
-    
-    
-//    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:path]];
-//    [request setHTTPMethod:@"GET"];
-//    [NSURLConnection sendAsynchronousRequest:request
-//                                       queue:[[NSOperationQueue alloc] init]
-//                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
-//                               if (connectionError || !data){
-//                                   NSLog(@"error occurred !!!!");
-//                               } else {
-//
-//
-//                               }
-//                           }];
     
 }
 
