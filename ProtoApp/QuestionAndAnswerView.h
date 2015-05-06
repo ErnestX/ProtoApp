@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ViewController.h"
 
 @interface QuestionAndAnswerView : UIView
+
+- (id)customInit:(ViewController*)contr;
 
 @end

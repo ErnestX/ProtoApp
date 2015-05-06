@@ -12,6 +12,7 @@
 #import "TeamView.h"
 #import "GlobalGetters.h"
 #import "CaptainColorPickerView.h"
+#import "QuestionAndAnswerView.h"
 
 @interface ViewController ()
 
@@ -84,6 +85,16 @@
     NSLog(@"color chosen: %d", color);
     //TODO: Call network
     [self transitToSeeScoreLayout];
+}
+
+- (BOOL) setQuestionAndStartTimer: (Colors)question
+{
+    if (![self isInOffendingTeam]) {
+        [self transitFromWaitForQuestionToAnswerQuestionLayout:question];
+        return true;
+    } else {
+        return false;
+    }
 }
 
 #pragma mark - Layouts And Controls
@@ -247,13 +258,35 @@
  */
 - (BOOL) transitFromNewTurnToWaitForQuestion
 {
-    NSLog(@"wait for the question");
-    return true;
+    if (![self isInOffendingTeam]) {
+        
+        // buttons for testing
+        [b1 removeFromSuperview];
+        [b2 removeFromSuperview];
+        
+        b1 = [UIButton buttonWithType:UIButtonTypeSystem];
+        [b1 setTitle: @"red" forState:UIControlStateNormal];
+        b1.frame = CGRectMake([self getScreenWidth] - 170, [self getGameViewHeight] - 40, 150, 50);
+        [b1 addTarget:self action:@selector(whatIsTheComplimentOfRed) forControlEvents:UIControlEventTouchUpInside];
+        
+        b2 = [UIButton buttonWithType:UIButtonTypeSystem];
+        [b2 setTitle: @"blue" forState:UIControlStateNormal];
+        b2.frame = CGRectMake([self getScreenWidth] - 60, [self getGameViewHeight] - 40, 70, 50);
+        [b2 addTarget:self action:@selector(whatIsTheComplimentOfBlue) forControlEvents:UIControlEventTouchUpInside];
+        
+        [gameView addSubview:b1];
+        [gameView addSubview:b2];
+        
+        NSLog(@"wait for the question");
+        return true;
+    } else {
+        return false;
+    }
 }
 
-- (void) transitFromWaitForQuestionToAnswerQuestionLayout
+- (void) transitFromWaitForQuestionToAnswerQuestionLayout:(Colors)question
 {
-    
+    [gameView addSubview:[[QuestionAndAnswerView alloc]customInit:self]];
 }
 
 - (void) transitToSeeScoreLayout
@@ -368,7 +401,7 @@
           NSLog(@"connect myself successful");
       }
       failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-          NSLog(@"error code: %d", operation.response.statusCode);
+          NSLog(@"error code: %ld", (long)operation.response.statusCode);
       }];
     
 }
@@ -397,6 +430,16 @@
 - (void) assignAsMinion
 {
     [self assignRole:false];
+}
+
+- (void) whatIsTheComplimentOfRed
+{
+    [self setQuestionAndStartTimer:RED];
+}
+
+- (void) whatIsTheComplimentOfBlue
+{
+    [self setQuestionAndStartTimer:BLUE];
 }
 
 @end
