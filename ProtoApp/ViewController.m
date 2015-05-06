@@ -133,7 +133,7 @@
     UILabel* l = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 500, 200)];
     l.transform = CGAffineTransformMake(1, 0, 0, 1, [self getScreenWidth]/2 - 160, [self getGameViewHeight]/2 - 150);
     l.font = [l.font fontWithSize:100.0];
-    l.text = @"Turn 1"; // TODO: dynamilize this
+    l.text = [NSString stringWithFormat:@"Turn %d",turn]; // TODO: dynamilize this
     l.textColor = [UIColor whiteColor];
     [statusView addSubview:l];
     [self setNewGameViewPushAnimation:NULL additionalView:l completionBlock:^(void){
