@@ -14,25 +14,30 @@
     float colorCardHeight;
     float colorCardWidth;
     CALayer* colorRing;
+    BOOL colorSelected;
     
+    CALayer* selectedCard;
+    NSInteger selectedCardIndex;
+    CATransform3D selectedCardTransform;
+    float selectedCardZPosition;
+    
+    UIButton* confirmButton;
+    
+    ViewController* controller;
 }
 
-- (void)iVarInit
+- (id)customInit: (ViewController*) contr
 {
+    CaptainColorPickerView* ccpv = [super initWithFrame:CGRectMake(0, 0, [GlobalGetters getScreenWidth], [GlobalGetters getGameViewHeight])]; // set the frame the same as gameView's
+
     colorCardHeight = 200;
     colorCardWidth = 100;
     colorRing = [CALayer layer];
     colorRing.frame = self.layer.frame;
     [self.layer addSublayer:colorRing];
-}
-
-- (id)customInit
-{
-    CaptainColorPickerView* ccpv = [super initWithFrame:CGRectMake(0, 0, [GlobalGetters getScreenWidth], [GlobalGetters getGameViewHeight])]; // set the frame the same as gameView's
-    [self iVarInit];
-    //self.backgroundColor = [UIColor blueColor];
     
-    //colorRing.backgroundColor = [UIColor redColor].CGColor;
+    controller = contr;
+    
     return ccpv;
 }
 
@@ -63,46 +68,80 @@
         [colorRing addSublayer:colorCard];
     }
     [CATransaction commit];
+    
+    colorSelected = false;
 }
 
 - (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     [super touchesBegan:touches withEvent:event];
     CGPoint touchPoint = [(UITouch*)[touches anyObject] locationInView:self];
-    for (CALayer* c in colorRing.sublayers) {
-        if ([c.modelLayer containsPoint:[c convertPoint:touchPoint fromLayer:c.superlayer]]) {
-            [self colorSelected:c];
+    
+    if (!colorSelected) {
+        for (CALayer* c in colorRing.sublayers) {
+            if ([c.modelLayer containsPoint:[c convertPoint:touchPoint fromLayer:c.superlayer]]) {
+                [self colorSelected:c];
+            }
         }
+    } else {
+        [self unselectColor];
     }
 }
 
 - (void) colorSelected:(CALayer*)card
 {
-    NSLog(@"color selected");
-    NSInteger index = [colorRing.sublayers indexOfObject:card];
-    CATransform3D transform = card.transform;
-    float zPos = card.zPosition;
+    selectedCardIndex = [colorRing.sublayers indexOfObject:card];
+    selectedCardTransform = card.transform;
+    selectedCardZPosition = card.zPosition;
     
+    selectedCard = card;
     card.zPosition = 100;
     CATransform3D tempTrans = CATransform3DMakeScale(8.1, 3, 1);
     card.transform = CATransform3DTranslate(tempTrans, 0, 66.5, 0);
     
-    UIButton* b = [UIButton buttonWithType:UIButtonTypeSystem];
-    [b setTitle: @"CONFIRM" forState:UIControlStateNormal];
-    [b setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    b.frame = CGRectMake([GlobalGetters getScreenWidth]/2 - 35, [GlobalGetters getGameViewHeight]/2 - 30, 70, 50);
-    [b addTarget:self action:@selector(confirmButtonDown:) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:b];
+    confirmButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [confirmButton setTitle: @"CONFIRM" forState:UIControlStateNormal];
+    [confirmButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    confirmButton.frame = CGRectMake([GlobalGetters getScreenWidth]/2 - 35, [GlobalGetters getGameViewHeight]/2 - 30, 70, 50);
+    [confirmButton addTarget:self action:@selector(confirmButtonDown:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:confirmButton];
+    
+    NSLog(@"color selected %ld", (long)selectedCardIndex);
+    
+    colorSelected = true;
 }
 
 - (IBAction)confirmButtonDown:(id)sender
 {
     [self sendColor];
+    [confirmButton removeFromSuperview];
+}
+
+- (void)unselectColor
+{
+    selectedCard.transform = selectedCardTransform;
+    selectedCard.zPosition = selectedCardZPosition;
+    [confirmButton removeFromSuperview];
+    colorSelected = false;
 }
 
 - (void)sendColor
 {
+    // animation
+    UIView* gameView = [self superview];
+    [[gameView superview] bringSubviewToFront:gameView];
     
+    [CATransaction begin];
+    [CATransaction setAnimationDuration:1];
+    selectedCard.position = CGPointMake(selectedCard.position.x, selectedCard.position.y - 800);
+    [CATransaction commit];
+    Colors colorPicked = [self getColorByIndex:selectedCardIndex];
+    [controller sendColorPicked:colorPicked];
+}
+
+- (Colors)getColorByIndex: (NSInteger) index
+{
+    return (Colors)index;
 }
 
 @end

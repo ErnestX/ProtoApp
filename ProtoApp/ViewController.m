@@ -79,6 +79,12 @@
     }
 }
 
+- (void) sendColorPicked:(Colors) color
+{
+    NSLog(@"color chosen: %d", color);
+    //TODO: Call network
+}
+
 #pragma mark - Layouts And Controls
 
 #pragma mark Comfirmation
@@ -203,7 +209,7 @@
 - (BOOL) transitFromCaptainAssignToCaptainPickColorLayout
 {
     if (isCaptain) {
-        CaptainColorPickerView* ccpv = [[CaptainColorPickerView alloc]customInit];
+        CaptainColorPickerView* ccpv = [[CaptainColorPickerView alloc]customInit:self];
         [gameView addSubview:ccpv];
         [ccpv generateColorRing];
         return true;
@@ -287,6 +293,9 @@
 
 - (void) transformViewAnimated: (UIView*)v endTransform:(CGAffineTransform) transform completionBlock:(void (^)(void))completionBlock
 {
+    
+    [self.view bringSubviewToFront:statusView];
+    
     CABasicAnimation *animaiton = [CABasicAnimation animation];
     animaiton.keyPath = @"transform";
     animaiton.fromValue = [NSValue valueWithCATransform3D:v.layer.transform];

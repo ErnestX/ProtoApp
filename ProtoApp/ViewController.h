@@ -52,5 +52,10 @@
 
 - (void) endGame;
 
+/*
+ this method is not to be called by network
+ */
+- (void) sendColorPicked:(Colors) color;
+
 @end
 
