@@ -11,7 +11,7 @@
 #import "GameView.h"
 #import "TeamView.h"
 #import "GlobalGetters.h"
-#import "CaptainColorPickerView.h";
+#import "CaptainColorPickerView.h"
 
 @interface ViewController ()
 
@@ -41,7 +41,6 @@
     
     [self setUpReadyComfirmationLayout];
     
-    [self testRequest];
 }
 
 - (void) customInit
@@ -325,19 +324,36 @@
     return [[UIScreen mainScreen] bounds].size.width;
 }
 
-- (void) testRequest {
-    NSString *path = @"http://localhost:8080/ProtoApp/MyServlet";
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:path]];
-    [request setHTTPMethod:@"GET"];
-    [NSURLConnection sendAsynchronousRequest:request
-                                       queue:[[NSOperationQueue alloc] init]
-                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
-                               if (connectionError || !data) {
-                                   NSLog(@"error occurred !!!!");
-                               } else {
-//                                   NSString *str = [NSString stringWithFormat:@"key: %@ value: %@", response.];
-                               }
-                           }];
+
+- (void) connectMyself {
+    NSString *path = @"http://localhost:8080/ProtoApp/ConnectServlet";
+    
+    AFHTTPRequestOperationManager *mgr = [AFHTTPRequestOperationManager manager];
+    NSString *uid = [[UIDevice currentDevice] identifierForVendor].UUIDString;
+    NSDictionary *params = @{@"uid" : uid};
+    [mgr POST:path
+   parameters:params
+      success:^(AFHTTPRequestOperation *operation, id responseObject) {
+          NSLog(@"connect myself successful");
+      }
+      failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+          NSLog(@"error code: %ld", (long)error.code);
+      }];
+    
+    
+    
+//    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:path]];
+//    [request setHTTPMethod:@"GET"];
+//    [NSURLConnection sendAsynchronousRequest:request
+//                                       queue:[[NSOperationQueue alloc] init]
+//                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+//                               if (connectionError || !data){
+//                                   NSLog(@"error occurred !!!!");
+//                               } else {
+//
+//
+//                               }
+//                           }];
     
 }
 
