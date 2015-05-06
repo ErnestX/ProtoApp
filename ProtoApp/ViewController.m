@@ -153,7 +153,7 @@
     
     b2 = [UIButton buttonWithType:UIButtonTypeSystem];
     [b2 setTitle: @"Minion" forState:UIControlStateNormal];
-    b2.frame = CGRectMake([self getScreenWidth] - 80, [self getGameViewHeight] - 40, 70, 50);
+    b2.frame = CGRectMake([self getScreenWidth] - 60, [self getGameViewHeight] - 40, 70, 50);
     [b2 addTarget:self action:@selector(assignAsMinion) forControlEvents:UIControlEventTouchUpInside];
     
     [gameView addSubview:b1];
@@ -162,7 +162,7 @@
     UILabel* l = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 500, 200)];
     l.transform = CGAffineTransformMake(1, 0, 0, 1, [self getScreenWidth]/2 - 160, [self getGameViewHeight]/2 - 150);
     l.font = [l.font fontWithSize:100.0];
-    l.text = [NSString stringWithFormat:@"Turn %d",(long)turn];
+    l.text = [NSString stringWithFormat:@"Turn %ld",(long)turn];
     l.textColor = [UIColor whiteColor];
     [statusView addSubview:l];
     [self setNewGameViewPushAnimation:NULL additionalView:l completionBlock:^(void){
@@ -203,7 +203,9 @@
 - (BOOL) transitFromCaptainAssignToCaptainPickColorLayout
 {
     if (isCaptain) {
-        [gameView addSubview:[[CaptainColorPickerView alloc]customInit]];
+        CaptainColorPickerView* ccpv = [[CaptainColorPickerView alloc]customInit];
+        [gameView addSubview:ccpv];
+        [ccpv generateColorRing];
         return true;
     } else {
         return false;
