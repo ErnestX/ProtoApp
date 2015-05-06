@@ -21,8 +21,11 @@
     StatusView* statusView;
     GameView* gameView;
     BOOL TEAM;
+    BOOL isCaptain;
     BOOL assignedTeam;
     NSInteger turn;
+    UIButton* b1;
+    UIButton* b2;
 }
 
 - (void)viewDidLoad {
@@ -65,6 +68,17 @@
     }
 }
 
+- (BOOL) assignRole:(BOOL)isCapt
+{
+    if ([self isInOffendingTeam]) {
+        isCaptain = isCapt;
+        [self transitFromNewTurnToCaptainAssignLayout];
+        return true;
+    } else {
+        return false;
+    }
+}
+
 #pragma mark - Layouts And Controls
 
 #pragma mark Comfirmation
@@ -80,11 +94,11 @@
     [comfirmationSwitch addSubview:switchLabel];
     [gameView addSubview:comfirmationSwitch];
 
-    UIButton* b1 = [UIButton buttonWithType:UIButtonTypeSystem];
+    b1 = [UIButton buttonWithType:UIButtonTypeSystem];
     [b1 setTitle: @"team1" forState:UIControlStateNormal];
     b1.frame = CGRectMake([self getScreenWidth] - 150, [self getGameViewHeight] - 40, 70, 50);
     [b1 addTarget:self action:@selector(putInTeamOne) forControlEvents:UIControlEventTouchUpInside];
-    UIButton* b2 = [UIButton buttonWithType:UIButtonTypeSystem];
+     b2 = [UIButton buttonWithType:UIButtonTypeSystem];
     [b2 setTitle: @"team2" forState:UIControlStateNormal];
     b2.frame = CGRectMake([self getScreenWidth] - 80, [self getGameViewHeight] - 40, 70, 50);
     [b2 addTarget:self action:@selector(putInTeamTwo) forControlEvents:UIControlEventTouchUpInside];
@@ -108,7 +122,7 @@
     GameView* newGv = [[GameView alloc]customInit];
     
     //buttons for testing
-    UIButton* b1 = [UIButton buttonWithType:UIButtonTypeSystem];
+    b1 = [UIButton buttonWithType:UIButtonTypeSystem];
     [b1 setTitle: @"StartsNewRound" forState:UIControlStateNormal];
     b1.frame = CGRectMake([self getScreenWidth] - 150, [self getGameViewHeight] - 40, 150, 50);
     [b1 addTarget:self action:@selector(startNewRound) forControlEvents:UIControlEventTouchUpInside];
@@ -130,10 +144,24 @@
 
 - (void) transitFromTeamAssignmentToNewTurnLayout
 {
+    [b1 removeFromSuperview];
+    b1 = [UIButton buttonWithType:UIButtonTypeSystem];
+    [b1 setTitle: @"Captain" forState:UIControlStateNormal];
+    b1.frame = CGRectMake([self getScreenWidth] - 170, [self getGameViewHeight] - 40, 150, 50);
+    [b1 addTarget:self action:@selector(assignAsCaptain) forControlEvents:UIControlEventTouchUpInside];
+    
+    b2 = [UIButton buttonWithType:UIButtonTypeSystem];
+    [b2 setTitle: @"Minion" forState:UIControlStateNormal];
+    b2.frame = CGRectMake([self getScreenWidth] - 80, [self getGameViewHeight] - 40, 70, 50);
+    [b2 addTarget:self action:@selector(assignAsMinion) forControlEvents:UIControlEventTouchUpInside];
+    
+    [gameView addSubview:b1];
+    [gameView addSubview:b2];
+    
     UILabel* l = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 500, 200)];
     l.transform = CGAffineTransformMake(1, 0, 0, 1, [self getScreenWidth]/2 - 160, [self getGameViewHeight]/2 - 150);
     l.font = [l.font fontWithSize:100.0];
-    l.text = [NSString stringWithFormat:@"Turn %d",turn]; // TODO: dynamilize this
+    l.text = [NSString stringWithFormat:@"Turn %d",(long)turn];
     l.textColor = [UIColor whiteColor];
     [statusView addSubview:l];
     [self setNewGameViewPushAnimation:NULL additionalView:l completionBlock:^(void){
@@ -146,7 +174,27 @@
  */
 - (BOOL) transitFromNewTurnToCaptainAssignLayout
 {
-    return true;
+    NSLog(@"mark");
+    if ([self isInOffendingTeam]) {
+        UILabel* l = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 500, 200)];
+        l.transform = CGAffineTransformMake(1, 0, 0, 1, [self getScreenWidth]/2 - 160, [self getGameViewHeight]/2 - 150);
+        l.font = [l.font fontWithSize:100.0];
+        if (isCaptain) {
+            l.text = [NSString stringWithFormat:@"Captain"];
+        } else {
+            l.text = [NSString stringWithFormat:@"Minion"];
+        }
+        l.textColor = [UIColor whiteColor];
+        [statusView addSubview:l];
+        [self setNewGameViewPushAnimation:NULL additionalView:l completionBlock:^(void){
+            [self transformViewAnimated:l endTransform:CGAffineTransformMake(0.3, 0, 0, 0.3, 110, -50) completionBlock:^(void){
+                
+            }];
+        }];
+        return true;
+    } else {
+        return false;
+    }
 }
 
 /*
@@ -251,6 +299,11 @@
 
 #pragma mark - Getters
 
+- (BOOL) isInOffendingTeam
+{
+    return TEAM == ((turn % 2)==1);
+}
+
 - (float) getGameViewHeight
 {
 //    return [self getScreenHeight] - STATUS_VIEW_HEIGHT;
@@ -297,6 +350,16 @@
 - (void) putInTeamTwo
 {
     [self putInTeam:false];
+}
+
+- (void) assignAsCaptain
+{
+    [self assignRole:true];
+}
+
+- (void) assignAsMinion
+{
+    [self assignRole:false];
 }
 
 @end
