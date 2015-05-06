@@ -8,11 +8,13 @@
 
 #import "CaptainColorPickerView.h"
 #import "GlobalGetters.h"
+#import "ColorsEnumType.h"
 
 @implementation CaptainColorPickerView {
     float colorCardHeight;
     float colorCardWidth;
     CALayer* colorRing;
+    
 }
 
 - (void)iVarInit
@@ -72,10 +74,6 @@
             [self colorSelected:c];
         }
     }
-//    
-//    if ([colorRing containsPoint:touchPoint]) {
-//        NSLog(@"got it");
-//    }
 }
 
 - (void) colorSelected:(CALayer*)card
@@ -88,6 +86,23 @@
     card.zPosition = 100;
     CATransform3D tempTrans = CATransform3DMakeScale(8.1, 3, 1);
     card.transform = CATransform3DTranslate(tempTrans, 0, 66.5, 0);
+    
+    UIButton* b = [UIButton buttonWithType:UIButtonTypeSystem];
+    [b setTitle: @"CONFIRM" forState:UIControlStateNormal];
+    [b setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    b.frame = CGRectMake([GlobalGetters getScreenWidth]/2 - 35, [GlobalGetters getGameViewHeight]/2 - 30, 70, 50);
+    [b addTarget:self action:@selector(confirmButtonDown:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:b];
+}
+
+- (IBAction)confirmButtonDown:(id)sender
+{
+    [self sendColor];
+}
+
+- (void)sendColor
+{
+    
 }
 
 @end
