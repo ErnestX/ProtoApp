@@ -12,9 +12,11 @@
 
 - (id) customInitWithTeam:(BOOL)isInTeamOne
 {
-    TeamView* tv = [self initWithFrame:CGRectMake(10, 10, 200, 50)];
-    UILabel* l = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 200, 50)];
+    TeamView* tv = [self initWithFrame:CGRectMake(10, 10, 500, 200)];
+    UILabel* l = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 500, 200)];
     l.textColor = [UIColor whiteColor];
+    l.font = [l.font fontWithSize:100.0];
+    [l adjustsFontSizeToFitWidth];
     
     if (isInTeamOne) {
         l.text = @"Team 1";

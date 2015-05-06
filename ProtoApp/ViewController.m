@@ -93,10 +93,51 @@
 {
     GameView* newGv = [[GameView alloc]customInit];
     TeamView* tv = [[TeamView alloc]customInitWithTeam:isInTeamOne];
+    tv.transform = CGAffineTransformMake(1, 0, 0, 1, [self getScreenWidth]/2 - 170, [self getGameViewHeight]/2 - 150);
+    // add to GV for now
     [newGv addSubview:tv];
-    
     [self setNewGameViewPush:newGv];
-    NSLog(@"MARK");
+}
+
+/*
+ @effect:add the newView as a subview and transit to it by pushing from right. gameView will be assigned to the newView in the end.
+ */
+- (void) setNewGameViewPush:(GameView*) newView
+{
+    // position the new view so that it's on the right of the old one.
+    newView.frame = CGRectMake([self getScreenWidth], STATUS_VIEW_HEIGHT, newView.frame.size.width, newView.frame.size.height);
+    
+    [self.view addSubview:newView];
+    
+    CABasicAnimation *animation1 = [CABasicAnimation animation];
+    animation1.keyPath = @"position.x";
+    animation1.fromValue = [NSNumber numberWithFloat:[self getScreenWidth]/2];
+    animation1.byValue = [NSNumber numberWithFloat: (-1 *[self getScreenWidth])];
+    [animation1 setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+    animation1.duration = 1.0;
+    CABasicAnimation *animation2 = [CABasicAnimation animation];
+    animation2.keyPath = @"position.x";
+    animation2.fromValue = [NSNumber numberWithFloat:[self getScreenWidth] * 1.5];
+    animation2.byValue = [NSNumber numberWithFloat: (-1 *[self getScreenWidth])];
+    [animation2 setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+    animation2.duration = 1.0;
+    
+    [CATransaction begin];
+    [CATransaction setCompletionBlock:^(void) {
+        [self animateTeamView];
+    }];
+    [gameView.layer addAnimation:animation1 forKey:@"animation1"];
+    [newView.layer addAnimation:animation2 forKey:@"animation2"];
+    [CATransaction commit];
+    
+    newView.frame = gameView.frame;
+    
+    gameView = newView;
+}
+
+- (void) animateTeamView
+{
+    NSLog(@"testing");
 }
 
 - (void) transitFromTeamAssignmentToNewTurnLayout
@@ -157,47 +198,14 @@
 
 #pragma mark - Transition Helpers
 
-/*
- @effect:add the newView as a subview and transit to it by pushing from right. gameView will be assigned to the newView in the end
- */
-- (void) setNewGameViewPush:(GameView*) newView
-{
-    float SPEED = 1500;
-    // position the new view so that it's on the right of the old one.
-    newView.frame = CGRectMake([self getScreenWidth], STATUS_VIEW_HEIGHT, newView.frame.size.width, newView.frame.size.height);
-    
-    [self.view addSubview:newView];
-    
-    // push both of them
-//    [UIView animateWithDuration:1.0 animations:^(void) {
-//         newView.frame = CGRectMake(newView.frame.origin.x - SPEED, newView.frame.origin.y, newView.frame.size.width, newView.frame.size.height);
-//         gameView.frame = CGRectMake(gameView.frame.origin.x - SPEED, gameView.frame.origin.y, gameView.frame.size.width, gameView.frame.size.height);
-//    }];
-    CABasicAnimation *animation1 = [CABasicAnimation animation];
-    animation1.keyPath = @"position.x";
-    animation1.fromValue = [NSNumber numberWithFloat:[self getScreenWidth]/2];
-    animation1.byValue = [NSNumber numberWithFloat: (-1 *[self getScreenWidth])];
-    [animation1 setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-    animation1.duration = 1.0;
-    CABasicAnimation *animation2 = [CABasicAnimation animation];
-    animation2.keyPath = @"position.x";
-    animation2.fromValue = [NSNumber numberWithFloat:[self getScreenWidth] * 1.5];
-    animation2.byValue = [NSNumber numberWithFloat: (-1 *[self getScreenWidth])];
-    [animation2 setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-    animation2.duration = 1.0;
-    
-    [gameView.layer addAnimation:animation1 forKey:@"animation1"];
-    [newView.layer addAnimation:animation2 forKey:@"animation2"];
-    newView.frame = gameView.frame;
-    
-    gameView = newView;
-}
+
 
 #pragma mark - Getters
 
 - (float) getGameViewHeight
 {
-    return [self getScreenHeight] - STATUS_VIEW_HEIGHT;
+//    return [self getScreenHeight] - STATUS_VIEW_HEIGHT;
+    return gameView.frame.size.height;
 }
 
 - (float) getScreenHeight

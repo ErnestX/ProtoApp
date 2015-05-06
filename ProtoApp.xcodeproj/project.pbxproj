@@ -20,6 +20,7 @@
 		CA027C041AF94C2100D2D9F6 /* StatusView.m in Sources */ = {isa = PBXBuildFile; fileRef = CA027C031AF94C2100D2D9F6 /* StatusView.m */; };
 		CA027C071AF94C5900D2D9F6 /* QuestionAndAnswerView.m in Sources */ = {isa = PBXBuildFile; fileRef = CA027C061AF94C5900D2D9F6 /* QuestionAndAnswerView.m */; };
 		CA027C0A1AF95EF200D2D9F6 /* GameView.m in Sources */ = {isa = PBXBuildFile; fileRef = CA027C091AF95EF200D2D9F6 /* GameView.m */; };
+		CA027C101AF9D3F600D2D9F6 /* Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = CA027C0F1AF9D3F600D2D9F6 /* Utilities.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,8 @@
 		CA027C061AF94C5900D2D9F6 /* QuestionAndAnswerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuestionAndAnswerView.m; sourceTree = "<group>"; };
 		CA027C081AF95EF200D2D9F6 /* GameView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameView.h; sourceTree = "<group>"; };
 		CA027C091AF95EF200D2D9F6 /* GameView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameView.m; sourceTree = "<group>"; };
+		CA027C0E1AF9D3F600D2D9F6 /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utilities.h; sourceTree = "<group>"; };
+		CA027C0F1AF9D3F600D2D9F6 /* Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utilities.m; sourceTree = "<group>"; };
 		FEA4EDF1D21035A981BF86B0 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -122,6 +125,8 @@
 				CA027BD01AF82A5A00D2D9F6 /* ViewController.m */,
 				CA027BF31AF92BE600D2D9F6 /* ColorsEnumType.h */,
 				CA027BF41AF9304700D2D9F6 /* Network.h */,
+				CA027C0E1AF9D3F600D2D9F6 /* Utilities.h */,
+				CA027C0F1AF9D3F600D2D9F6 /* Utilities.m */,
 				CA027BF81AF94B3600D2D9F6 /* Views */,
 				CA027BD51AF82A5A00D2D9F6 /* Images.xcassets */,
 				CA027BC81AF82A5A00D2D9F6 /* Supporting Files */,
@@ -323,6 +328,7 @@
 				CA027BFB1AF94B7800D2D9F6 /* CaptainColorPickerView.m in Sources */,
 				CA027BF71AF948F000D2D9F6 /* TeamView.m in Sources */,
 				CA027C071AF94C5900D2D9F6 /* QuestionAndAnswerView.m in Sources */,
+				CA027C101AF9D3F600D2D9F6 /* Utilities.m in Sources */,
 				CA027C0A1AF95EF200D2D9F6 /* GameView.m in Sources */,
 				CA027BFE1AF94BC700D2D9F6 /* RoleView.m in Sources */,
 				CA027C041AF94C2100D2D9F6 /* StatusView.m in Sources */,
