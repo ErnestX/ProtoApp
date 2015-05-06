@@ -53,7 +53,7 @@
 - (void) putInTeam:(BOOL)isInTeamOne
 {
     TEAM = isInTeamOne;
-    assignedTeam = true;
+    assignedTeam = true; // this should be the only line that can modify assignedTeam
     [self transitFromComfirmationToTeamAssignmentLayout:isInTeamOne];
 }
 
@@ -83,6 +83,7 @@
 {
     NSLog(@"color chosen: %d", color);
     //TODO: Call network
+    [self transitToSeeScoreLayout];
 }
 
 #pragma mark - Layouts And Controls
@@ -141,9 +142,7 @@
     [self setNewGameViewPushAnimation:newGv additionalView:tv completionBlock:^(void) {
         [gameView removeFromSuperview];
         gameView = newGv;
-        [self transformViewAnimated:tv endTransform:CGAffineTransformMake(0.3, 0, 0, 0.3, -150, -50) completionBlock:^(void){
-            //[self transitFromTeamAssignmentToNewTurnLayout]; //should be activated by Network
-        }];
+        [self transformViewAnimated:tv endTransform:CGAffineTransformMake(0.3, 0, 0, 0.3, -150, -50) completionBlock:^(void){}];
     }];
 }
 
@@ -172,7 +171,13 @@
     l.textColor = [UIColor whiteColor];
     [statusView addSubview:l];
     [self setNewGameViewPushAnimation:NULL additionalView:l completionBlock:^(void){
-        [self transformViewAnimated:l endTransform:CGAffineTransformMake(0.3, 0, 0, 0.3, -20, -50) completionBlock:^(void){}];
+        [self transformViewAnimated:l endTransform:CGAffineTransformMake(0.3, 0, 0, 0.3, -20, -50) completionBlock:^(void){
+            // after the animation
+            if (![self isInOffendingTeam]) {
+                // not our turn, go wait for question
+                [self transitFromNewTurnToWaitForQuestion];
+            }
+        }];
     }];
 }
 
@@ -185,18 +190,27 @@
         UILabel* l = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 500, 200)];
         l.transform = CGAffineTransformMake(1, 0, 0, 1, [self getScreenWidth]/2 - 160, [self getGameViewHeight]/2 - 150);
         l.font = [l.font fontWithSize:100.0];
+        l.textColor = [UIColor whiteColor];
+        
         if (isCaptain) {
             l.text = [NSString stringWithFormat:@"Captain"];
+            [statusView addSubview:l];
+            
+            [self setNewGameViewPushAnimation:NULL additionalView:l completionBlock:^(void){
+                [self transformViewAnimated:l endTransform:CGAffineTransformMake(0.3, 0, 0, 0.3, 110, -50) completionBlock:^(void) {
+                    [self transitFromCaptainAssignToCaptainPickColorLayout]; // go straight ahead
+                }];
+            }];
         } else {
             l.text = [NSString stringWithFormat:@"Minion"];
-        }
-        l.textColor = [UIColor whiteColor];
-        [statusView addSubview:l];
-        [self setNewGameViewPushAnimation:NULL additionalView:l completionBlock:^(void){
-            [self transformViewAnimated:l endTransform:CGAffineTransformMake(0.3, 0, 0, 0.3, 110, -50) completionBlock:^(void) {
-                [self transitFromCaptainAssignToCaptainPickColorLayout]; // go straight ahead
+            [statusView addSubview:l];
+            
+            [self setNewGameViewPushAnimation:NULL additionalView:l completionBlock:^(void){
+                [self transformViewAnimated:l endTransform:CGAffineTransformMake(0.3, 0, 0, 0.3, 110, -50) completionBlock:^(void) {
+                    [self transitFromCaptainAssignToWaitForCaptainLayout]; // go ahead
+                }];
             }];
-        }];
+        }
         return true;
     } else {
         return false;
@@ -208,6 +222,8 @@
  */
 - (BOOL) transitFromCaptainAssignToCaptainPickColorLayout
 {
+    // no need for transition??? (the color ring just shows up)
+    
     if (isCaptain) {
         CaptainColorPickerView* ccpv = [[CaptainColorPickerView alloc]customInit:self];
         [gameView addSubview:ccpv];
@@ -222,6 +238,7 @@
  */
 - (BOOL) transitFromCaptainAssignToWaitForCaptainLayout
 {
+    NSLog(@"wait for the captain");
     return true;
 }
 
@@ -230,6 +247,7 @@
  */
 - (BOOL) transitFromNewTurnToWaitForQuestion
 {
+    NSLog(@"wait for the question");
     return true;
 }
 
