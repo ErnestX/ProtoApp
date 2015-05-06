@@ -11,6 +11,7 @@
 #import "GameView.h"
 #import "TeamView.h"
 #import "GlobalGetters.h"
+#import "CaptainColorPickerView.h";
 
 @interface ViewController ()
 
@@ -202,7 +203,7 @@
 - (BOOL) transitFromCaptainAssignToCaptainPickColorLayout
 {
     if (isCaptain) {
-        
+        [gameView addSubview:[[CaptainColorPickerView alloc]customInit]];
         return true;
     } else {
         return false;

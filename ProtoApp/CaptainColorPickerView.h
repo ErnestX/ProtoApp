@@ -10,4 +10,6 @@
 
 @interface CaptainColorPickerView : UIView
 
+- (id)customInit;
+
 @end
