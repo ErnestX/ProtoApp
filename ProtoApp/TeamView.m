@@ -10,19 +10,4 @@
 
 @implementation TeamView
 
-
-- (id) initWithFrame:(CGRect)frame
-{
-    TeamView* gv = [super initWithFrame:frame];
-    if (gv) {
-        [self customInit:gv];
-    }
-    return gv;
-}
-
-- (void) customInit: (TeamView*)gv
-{
-    
-}
-
 @end

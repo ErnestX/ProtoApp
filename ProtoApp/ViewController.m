@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "StatusView.h"
 #import "GameView.h"
+#import "TeamView.h"
 
 @interface ViewController ()
 
@@ -18,8 +19,8 @@
 {
     StatusView* statusView;
     GameView* gameView;
-    float STATUS_VIEW_HEIGHT;
     BOOL TEAM;
+    float STATUS_VIEW_HEIGHT;
 }
 
 - (void) customInit
@@ -32,8 +33,8 @@
     
     [self customInit];
     
-    statusView = [[StatusView alloc]initWithFrame:CGRectMake(0, 0, [self getScreenWidth], STATUS_VIEW_HEIGHT)];
-    gameView = [[GameView alloc]initWithFrame:CGRectMake(0, STATUS_VIEW_HEIGHT, [self getScreenWidth], [self getGameViewHeight])];
+    statusView = [[StatusView alloc]customInit];
+    gameView = [[GameView alloc]customInit];
     
     [self.view addSubview:statusView];
     [self.view addSubview:gameView];
@@ -50,18 +51,21 @@
     [self transitFromComfirmationToTeamAssignmentLayout];
 }
 
-#pragma mark - Layouts
+#pragma mark - Layouts And Controls
+
+#pragma mark Comfirmation
 
 - (void) setUpReadyComfirmationLayout
 {
     UISwitch* comfirmationSwitch = [[UISwitch alloc]initWithFrame:CGRectMake([self getScreenWidth]/2 - 10, [self getScreenHeight]/2 - STATUS_VIEW_HEIGHT, 20, 20)];
+    [comfirmationSwitch addTarget:self action:@selector(comfirmationSwitchOn:) forControlEvents:UIControlEventValueChanged];
+    
     UILabel* switchLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 40, 100, 20)];
     switchLabel.text = @"READY";
     switchLabel.textColor = [UIColor whiteColor];
     [comfirmationSwitch addSubview:switchLabel];
     [gameView addSubview:comfirmationSwitch];
-    
-    // just for testing
+
     UIButton* b1 = [UIButton buttonWithType:UIButtonTypeSystem];
     [b1 setTitle: @"team1" forState:UIControlStateNormal];
     b1.frame = CGRectMake([self getScreenWidth] - 150, [self getGameViewHeight] - 40, 70, 50);
@@ -74,9 +78,20 @@
     [gameView addSubview:b2];
 }
 
+- (IBAction)comfirmationSwitchOn:(id) sender
+{
+    if (((UISwitch*)sender).on) {
+        ((UISwitch*)sender).enabled = FALSE;
+        NSLog(@"ready");
+        // TODO: call readyToStartGame
+    }
+}
+
+#pragma mark TeamAssign
+
 - (void) transitFromComfirmationToTeamAssignmentLayout
 {
-    
+    GameView* newGv = [[GameView alloc]customInit];
 }
 
 - (void) transitFromTeamAssignmentToNewTurnLayout
@@ -138,12 +153,17 @@
 #pragma mark - Transition Helpers
 
 /*
- remove all subviews form gameView
+ remove all subviews form gameView by pushing them left out of screen
  */
-- (void) clearGameView
-{
-   //stub
-}
+//- (void) clearGameViewPushLeft
+//{
+//    float SPEED = 1500;
+//    [UIView animateWithDuration:1.0 animations:^(void) {
+//        for (UIView* v in gameView.subviews) {
+//            v.frame = CGRectMake(v.frame.origin.x - SPEED, v.frame.origin.y, v.frame.size.width, v.frame.size.height);
+//        }
+//    }];
+//}
 
 #pragma mark - Getters
 
@@ -169,11 +189,10 @@
     [NSURLConnection sendAsynchronousRequest:request
                                        queue:[[NSOperationQueue alloc] init]
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
-                               if (connectionError || !data){
+                               if (connectionError || !data) {
                                    NSLog(@"error occurred !!!!");
                                } else {
 //                                   NSString *str = [NSString stringWithFormat:@"key: %@ value: %@", response.];
-
                                }
                            }];
     

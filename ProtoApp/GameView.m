@@ -17,4 +17,20 @@
     return gv;
 }
 
+- (id) customInit
+{
+    float STATUS_VIEW_HEIGHT = 100;
+    return [self initWithFrame:CGRectMake(0, STATUS_VIEW_HEIGHT, [self getScreenWidth], [self getScreenHeight] - STATUS_VIEW_HEIGHT)];
+}
+
+- (float) getScreenHeight
+{
+    return [[UIScreen mainScreen] bounds].size.height;
+}
+     
+- (float) getScreenWidth
+{
+    return [[UIScreen mainScreen] bounds].size.width;
+}
+
 @end

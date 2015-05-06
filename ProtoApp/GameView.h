@@ -10,4 +10,6 @@
 
 @interface GameView : UIView
 
+- (id) customInit;
+
 @end

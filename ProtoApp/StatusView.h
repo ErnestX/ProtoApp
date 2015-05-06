@@ -10,4 +10,6 @@
 
 @interface StatusView : UIView
 
+- (id) customInit;
+
 @end
