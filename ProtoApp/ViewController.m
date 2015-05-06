@@ -337,7 +337,6 @@
    parameters:params
       success:^(AFHTTPRequestOperation *operation, id responseObject) {
           NSLog(@"connect myself successful");
-          int teamNum = (int)responseObject[@"team_num"];
       }
       failure:^(AFHTTPRequestOperation *operation, NSError *error) {
           NSLog(@"error code: %d", operation.response.statusCode);
