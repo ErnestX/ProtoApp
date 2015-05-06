@@ -152,7 +152,7 @@
     
     b2 = [UIButton buttonWithType:UIButtonTypeSystem];
     [b2 setTitle: @"Minion" forState:UIControlStateNormal];
-    b2.frame = CGRectMake([self getScreenWidth] - 80, [self getGameViewHeight] - 40, 70, 50);
+    b2.frame = CGRectMake([self getScreenWidth] - 60, [self getGameViewHeight] - 40, 70, 50);
     [b2 addTarget:self action:@selector(assignAsMinion) forControlEvents:UIControlEventTouchUpInside];
     
     [gameView addSubview:b1];

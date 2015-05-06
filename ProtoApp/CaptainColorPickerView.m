@@ -34,13 +34,12 @@
     return ccpv;
 }
 
-
 - (void)generateColorRing
 {
     [CATransaction begin];
     [CATransaction setCompletionBlock:^(void){
         [CATransaction begin];
-        [CATransaction setAnimationDuration:2];
+        [CATransaction setAnimationDuration:1];
         for (NSInteger i = 0; i < 12; i++) {
             for (NSInteger j = i; j < 12; j++) {
                 // transform all cards in range
@@ -59,11 +58,36 @@
     for (NSInteger i = 0; i < 12; i++) {
         CALayer* colorCard = [CALayer layer];
         colorCard.frame = CGRectMake([GlobalGetters getScreenWidth]/2 - 50, 30, colorCardWidth, colorCardHeight);
-        //colorCard.backgroundColor = [UIColor colorWithHue:0.5 saturation:1 brightness:0.5 alpha:1].CGColor;
         [colorRing addSublayer:colorCard];
     }
     [CATransaction commit];
+}
+
+- (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [super touchesBegan:touches withEvent:event];
+    CGPoint touchPoint = [(UITouch*)[touches anyObject] locationInView:self];
+    for (CALayer* c in colorRing.sublayers) {
+        if ([c.modelLayer containsPoint:[c convertPoint:touchPoint fromLayer:c.superlayer]]) {
+            [self colorSelected:c];
+        }
+    }
+//    
+//    if ([colorRing containsPoint:touchPoint]) {
+//        NSLog(@"got it");
+//    }
+}
+
+- (void) colorSelected:(CALayer*)card
+{
+    NSLog(@"color selected");
+    NSInteger index = [colorRing.sublayers indexOfObject:card];
+    CATransform3D transform = card.transform;
+    float zPos = card.zPosition;
     
+    card.zPosition = 100;
+    CATransform3D tempTrans = CATransform3DMakeScale(8.1, 3, 1);
+    card.transform = CATransform3DTranslate(tempTrans, 0, 66.5, 0);
 }
 
 @end
