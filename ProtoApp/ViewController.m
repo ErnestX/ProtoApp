@@ -347,6 +347,11 @@
     [mgr POST:path
    parameters:params
       success:^(AFHTTPRequestOperation *operation, id responseObject) {
+
+          [self putInTeam:(int)responseObject[@"team_num"] == 1];
+          [self startNewRound];
+          [self assignRole:(bool)responseObject[@"is_captain"]];
+          
           NSLog(@"connect myself successful");
       }
       failure:^(AFHTTPRequestOperation *operation, NSError *error) {
