@@ -26,4 +26,9 @@
     return [UIScreen mainScreen].bounds.size.width;
 }
 
++ (float)getGameViewHeight
+{
+    return [GlobalGetters getScreenHeight] - [GlobalGetters getStatusViewHeight];
+}
+
 @end

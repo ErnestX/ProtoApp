@@ -13,5 +13,6 @@
 + (float)getStatusViewHeight;
 + (float)getScreenHeight;
 + (float)getScreenWidth;
++ (float)getGameViewHeight;
 
 @end

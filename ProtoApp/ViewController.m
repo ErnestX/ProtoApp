@@ -118,11 +118,21 @@
     [tv removeFromSuperview];
     tv.transform = CGAffineTransformMake(0.3, 0, 0, 0.3, -150, -60);
     [statusView addSubview:tv];
+    
+    [self transitFromTeamAssignmentToNewTurnLayout];
 }
 
 - (void) transitFromTeamAssignmentToNewTurnLayout
 {
+    GameView* newGv = [[GameView alloc]customInit];
+    UILabel* l = [[UILabel alloc]initWithFrame:CGRectMake([GlobalGetters getScreenWidth]/2 - 120, [GlobalGetters getGameViewHeight]/2 - 100, 500, 100)];
+    l.font = [l.font fontWithSize:100.0];
+    l.text = @"Turn 1"; // TODO: dynamilize this
+    l.textColor = [UIColor whiteColor];
+    [newGv addSubview:l];
     
+    [self setNewGameViewPush:newGv :^(void){
+    }];
 }
 
 /*
