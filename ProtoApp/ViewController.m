@@ -174,7 +174,6 @@
  */
 - (BOOL) transitFromNewTurnToCaptainAssignLayout
 {
-    NSLog(@"mark");
     if ([self isInOffendingTeam]) {
         UILabel* l = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 500, 200)];
         l.transform = CGAffineTransformMake(1, 0, 0, 1, [self getScreenWidth]/2 - 160, [self getGameViewHeight]/2 - 150);
@@ -187,8 +186,8 @@
         l.textColor = [UIColor whiteColor];
         [statusView addSubview:l];
         [self setNewGameViewPushAnimation:NULL additionalView:l completionBlock:^(void){
-            [self transformViewAnimated:l endTransform:CGAffineTransformMake(0.3, 0, 0, 0.3, 110, -50) completionBlock:^(void){
-                
+            [self transformViewAnimated:l endTransform:CGAffineTransformMake(0.3, 0, 0, 0.3, 110, -50) completionBlock:^(void) {
+                [self transitFromCaptainAssignToCaptainPickColorLayout]; // go straight ahead
             }];
         }];
         return true;
@@ -202,7 +201,12 @@
  */
 - (BOOL) transitFromCaptainAssignToCaptainPickColorLayout
 {
-    return true;
+    if (isCaptain) {
+        
+        return true;
+    } else {
+        return false;
+    }
 }
 
 /*return true if success, false if is the captain
