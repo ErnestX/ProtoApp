@@ -88,43 +88,23 @@
     TeamView* tv = [[TeamView alloc]customInitWithTeam:isInTeamOne];
     
     tv.transform = CGAffineTransformMake(1, 0, 0, 1, [self getScreenWidth]/2 - 170, [self getGameViewHeight]/2 - 150);
-    //tv.transform = CGAffineTransformMake(1, 0, 0, 1, 0, 0);
     // add to GV for now
     [statusView addSubview:tv];
     [self setNewGameViewPush:newGv:tv:^(void) {
         [gameView removeFromSuperview];
         gameView = newGv;
-        //[self animateTeamView:tv];
+        [self transformViewAnimated:tv endTransform:CGAffineTransformMake(0.3, 0, 0, 0.3, -150, -50) completionBlock:^(void){}];
     }];
 }
 
-- (void) animateTeamView: (TeamView*)tv
-{
-    CABasicAnimation *animaiton = [CABasicAnimation animation];
-    CGAffineTransform transform = CGAffineTransformMake(0.3, 0, 0, 0.3, -150, -160);
-    animaiton.keyPath = @"transform";
-    animaiton.fromValue = [NSValue valueWithCATransform3D:tv.layer.transform];
-    animaiton.toValue = [NSValue valueWithCATransform3D:CATransform3DMakeAffineTransform(transform)];
-    [animaiton setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-    [animaiton setBeginTime:CACurrentMediaTime()+1.0];
-    [CATransaction begin];
-    [CATransaction setCompletionBlock:^(void) {
-        [self setTeamView:tv];
-    }];
-    [tv.layer addAnimation:animaiton forKey:@"animation"];
-    [CATransaction commit];
-    
-    //tv.layer.transform = CATransform3DMakeAffineTransform(transform); //this will finish before the animation even begin due to the delay
-}
-
-- (void) setTeamView: (TeamView*)tv
-{
-    [tv removeFromSuperview];
-    tv.transform = CGAffineTransformMake(0.3, 0, 0, 0.3, -150, -60);
-    [statusView addSubview:tv];
-    
-    [self transitFromTeamAssignmentToNewTurnLayout];
-}
+//- (void) setTeamView: (TeamView*)tv
+//{
+//    [tv removeFromSuperview];
+//    tv.transform = CGAffineTransformMake(0.3, 0, 0, 0.3, -150, -60);
+//    [statusView addSubview:tv];
+//    
+//    [self transitFromTeamAssignmentToNewTurnLayout];
+//}
 
 #pragma mark NewTurn
 
@@ -200,14 +180,10 @@
  */
 - (void) setNewGameViewPush:(GameView*) newGameView :(UIView*) otherView :(void (^)(void))completionBlock
 {
-//    // position the new view so that it's on the right of the old one.
-//    newGameView.frame = CGRectMake([self getScreenWidth], [GlobalGetters getStatusViewHeight], newGameView.frame.size.width, newGameView.frame.size.height);
-    
     [self.view insertSubview:newGameView atIndex:0]; // put at buttom
     
     CABasicAnimation *animation1 = [CABasicAnimation animation];
     animation1.keyPath = @"position.x";
-    //animation1.fromValue = [NSNumber numberWithFloat:[self getScreenWidth]/2];
     animation1.byValue = [NSNumber numberWithFloat: (-1 *[self getScreenWidth])];
     [animation1 setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
     animation1.duration = 1.0;
@@ -232,9 +208,25 @@
     [otherView.layer addAnimation:animation2 forKey:@"animation2"];
     [newGameView.layer addAnimation:animation3 forKey:@"animation3"];
     [CATransaction commit];
+}
+
+- (void) transformViewAnimated: (UIView*)v endTransform:(CGAffineTransform) transform completionBlock:(void (^)(void))completionBlock
+{
+    CABasicAnimation *animaiton = [CABasicAnimation animation];
+    animaiton.keyPath = @"transform";
+    animaiton.fromValue = [NSValue valueWithCATransform3D:v.layer.transform];
+    animaiton.toValue = [NSValue valueWithCATransform3D:CATransform3DMakeAffineTransform(transform)];
+    [animaiton setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+    [animaiton setBeginTime:CACurrentMediaTime()+1.0];
+    [CATransaction begin];
+    [CATransaction setCompletionBlock:^(void){
+        v.transform = transform;
+        completionBlock();
+    }];
+    [v.layer addAnimation:animaiton forKey:@"animation"];
+    [CATransaction commit];
     
-    
-    //newGameView.frame = gameView.frame;
+    //tv.layer.transform = CATransform3DMakeAffineTransform(transform); //this will finish before the animation even begin due to the delay
 }
 
 #pragma mark - Getters
