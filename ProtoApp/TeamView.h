@@ -10,4 +10,6 @@
 
 @interface TeamView : UIView
 
+- (id) customInitWithTeam:(BOOL)isInTeamOne;
+
 @end
