@@ -109,7 +109,7 @@
 - (IBAction)comfirmationSwitchOn:(id) sender
 {
     if (((UISwitch*)sender).on) {
-        ((UISwitch*)sender).enabled = FALSE;
+//        ((UISwitch*)sender).enabled = FALSE;
         NSLog(@"ready");
         // TODO: call readyToStartGame
         [self connectMyself];
@@ -327,7 +327,8 @@
 
 
 - (void) connectMyself {
-    NSString *path = @"http://localhost:8080/ProtoApp/ConnectServlet";
+//    NSString *path = @"http://localhost:8080/ProtoApp/ConnectServlet";
+    NSString *path = @"http://128.189.239.107:8080/ProtoApp/ConnectServlet";
     
     AFHTTPRequestOperationManager *mgr = [AFHTTPRequestOperationManager manager];
     NSString *uid = [[UIDevice currentDevice] identifierForVendor].UUIDString;
@@ -336,9 +337,10 @@
    parameters:params
       success:^(AFHTTPRequestOperation *operation, id responseObject) {
           NSLog(@"connect myself successful");
+          int teamNum = (int)responseObject[@"team_num"];
       }
       failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-          NSLog(@"error code: %ld", (long)error.code);
+          NSLog(@"error code: %d", operation.response.statusCode);
       }];
     
 }
