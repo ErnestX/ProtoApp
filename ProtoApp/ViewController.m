@@ -21,11 +21,13 @@
     StatusView* statusView;
     GameView* gameView;
     BOOL TEAM;
+    BOOL assignedTeam;
     NSInteger turn;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self customInit];
     
     statusView = [[StatusView alloc]customInit];
     gameView = [[GameView alloc]customInit];
@@ -38,11 +40,29 @@
     [self testRequest];
 }
 
+- (void) customInit
+{
+    assignedTeam = false;
+    turn = 0;
+}
+
 #pragma mark - Actions
 - (void) putInTeam:(BOOL)isInTeamOne
 {
     TEAM = isInTeamOne;
+    assignedTeam = true;
     [self transitFromComfirmationToTeamAssignmentLayout:isInTeamOne];
+}
+
+- (BOOL) startNewRound
+{
+    if (assignedTeam) {
+        turn += 1;
+        [self transitFromTeamAssignmentToNewTurnLayout];
+        return true;
+    } else {
+        return false;
+    }
 }
 
 #pragma mark - Layouts And Controls
@@ -86,16 +106,23 @@
 - (void) transitFromComfirmationToTeamAssignmentLayout: (BOOL)isInTeamOne
 {
     GameView* newGv = [[GameView alloc]customInit];
-    TeamView* tv = [[TeamView alloc]customInitWithTeam:isInTeamOne];
     
+    //buttons for testing
+    UIButton* b1 = [UIButton buttonWithType:UIButtonTypeSystem];
+    [b1 setTitle: @"StartsNewRound" forState:UIControlStateNormal];
+    b1.frame = CGRectMake([self getScreenWidth] - 150, [self getGameViewHeight] - 40, 150, 50);
+    [b1 addTarget:self action:@selector(startNewRound) forControlEvents:UIControlEventTouchUpInside];
+    [newGv addSubview:b1];
+    
+    TeamView* tv = [[TeamView alloc]customInitWithTeam:isInTeamOne];
     tv.transform = CGAffineTransformMake(1, 0, 0, 1, [self getScreenWidth]/2 - 160, [self getGameViewHeight]/2 - 150);
-    // add to GV for now
     [statusView addSubview:tv];
     [self setNewGameViewPushAnimation:newGv additionalView:tv completionBlock:^(void) {
         [gameView removeFromSuperview];
         gameView = newGv;
         [self transformViewAnimated:tv endTransform:CGAffineTransformMake(0.3, 0, 0, 0.3, -150, -50) completionBlock:^(void){
-            [self transitFromTeamAssignmentToNewTurnLayout];}];
+            //[self transitFromTeamAssignmentToNewTurnLayout]; //should be activated by Network
+        }];
     }];
 }
 
