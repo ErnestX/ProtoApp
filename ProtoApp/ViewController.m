@@ -53,7 +53,7 @@
 - (void) putInTeam:(BOOL)isInTeamOne
 {
     TEAM = isInTeamOne;
-    assignedTeam = true;
+    assignedTeam = true; // this should be the only line that can modify assignedTeam
     [self transitFromComfirmationToTeamAssignmentLayout:isInTeamOne];
 }
 
@@ -142,9 +142,7 @@
     [self setNewGameViewPushAnimation:newGv additionalView:tv completionBlock:^(void) {
         [gameView removeFromSuperview];
         gameView = newGv;
-        [self transformViewAnimated:tv endTransform:CGAffineTransformMake(0.3, 0, 0, 0.3, -150, -50) completionBlock:^(void){
-            //[self transitFromTeamAssignmentToNewTurnLayout]; //should be activated by Network
-        }];
+        [self transformViewAnimated:tv endTransform:CGAffineTransformMake(0.3, 0, 0, 0.3, -150, -50) completionBlock:^(void){}];
     }];
 }
 
@@ -173,7 +171,13 @@
     l.textColor = [UIColor whiteColor];
     [statusView addSubview:l];
     [self setNewGameViewPushAnimation:NULL additionalView:l completionBlock:^(void){
-        [self transformViewAnimated:l endTransform:CGAffineTransformMake(0.3, 0, 0, 0.3, -20, -50) completionBlock:^(void){}];
+        [self transformViewAnimated:l endTransform:CGAffineTransformMake(0.3, 0, 0, 0.3, -20, -50) completionBlock:^(void){
+            // after the animation
+            if (![self isInOffendingTeam]) {
+                // not our turn, go wait for question
+                [self transitFromNewTurnToWaitForQuestion];
+            }
+        }];
     }];
 }
 
@@ -234,6 +238,7 @@
  */
 - (BOOL) transitFromCaptainAssignToWaitForCaptainLayout
 {
+    NSLog(@"wait for the captain");
     return true;
 }
 
@@ -242,6 +247,7 @@
  */
 - (BOOL) transitFromNewTurnToWaitForQuestion
 {
+    NSLog(@"wait for the question");
     return true;
 }
 
