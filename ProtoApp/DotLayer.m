@@ -24,7 +24,6 @@
     sideLength = [GlobalGetters getGameViewHeight]/4/1.5;
     dotRadius = 50/1.5 - 5;
     self.frame = CGRectMake(0, 0, sideLength, sideLength);
-    self.anchorPoint = CGPointMake(0, 0); // the anchor point is the top left corner
 }
 
 - (void)drawInContext:(CGContextRef)ctx

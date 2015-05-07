@@ -56,9 +56,9 @@
     [CATransaction setCompletionBlock:^(void){
         [CATransaction begin];
         [CATransaction setAnimationDuration:1];
-        float y = 34;
+        float y = 74;
         for (NSInteger i = 0; i < 4; i++) {
-            float x = 20;
+            float x = 70;
             for (NSInteger j = 0; j < 3; j++) {
                 DotLayer* dl = [colorPicker.sublayers objectAtIndex:(i*3)+j];
                 dl.position = CGPointMake(x, y);
@@ -111,22 +111,18 @@
 - (void)colorSelected:(DotLayer*) dot
 {
     // send gameview to back for animations.
-//    UIView* gameView = [self superview];
-//    [[gameView superview] sendSubviewToBack:gameView];
+    UIView* gameView = [self superview];
+    [[gameView superview] sendSubviewToBack:gameView];
     
     dotSelected = dot;
     selectedLayerColor = (Colors)[colorPicker.sublayers indexOfObject:dotSelected];
     selectedLayerZPosArchive = dotSelected.zPosition;
     NSLog(@"color selected");
-//    [CATransaction begin];
     
     // run animation
     dotSelected.zPosition = 100;
-    dot.anchorPoint = CGPointMake(0.5, 0.5);
-    dot.transform = CATransform3DMakeTranslation(dot.frame.size.width/2, dot.frame.size.height/2, 0);
     displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(selectDotAnimation)];
     [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
-//    [CATransaction commit];
     
     // init buttons
     confirmButton = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -172,9 +168,9 @@
     if ([dotSelected getDotRaidus] > 50/1.5 - 5 + 1) {
         float newDotRadius;
         float newFrameSideLength;
-        if ([dotSelected getDotRaidus] > 50/1.5 - 5 + 21) {
-            newDotRadius = [dotSelected getDotRaidus]-20;
-            newFrameSideLength = dotSelected.frame.size.width - 40;
+        if ([dotSelected getDotRaidus] > 50/1.5 - 5 + 41) {
+            newDotRadius = [dotSelected getDotRaidus]-40;
+            newFrameSideLength = dotSelected.frame.size.width - 80;
         } else {
             newDotRadius = 50/1.5 - 5;
             newFrameSideLength = [GlobalGetters getGameViewHeight]/4/1.5;
@@ -201,8 +197,6 @@
     NSLog(@"canceled");
     // run animation
     [CATransaction begin];
-    dotSelected.anchorPoint = CGPointMake(0, 0);
-    dotSelected.transform = CATransform3DMakeTranslation(0, 0, 0);
     displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(unselectDotAnimation)];
     [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
     [CATransaction commit];
