@@ -53,7 +53,6 @@
     [self.view addSubview:statusView];
     
     [self setUpReadyComfirmationLayout];
-    
 }
 
 - (void) customInit
@@ -140,7 +139,7 @@
     [tickTimer invalidate];
     [timer invalidate];
     
-    NSLog(@"question:%ld | answer:%ld",questionPickedByCaptain, answerProposed);
+    NSLog(@"question:%u | answer:%u",questionPickedByCaptain, answerProposed);
     
     NSInteger rawScore = [timerView getCurrentTime]; // rawScore: the time left
     NSInteger score;
@@ -158,6 +157,14 @@
     }
     
     NSLog(@"score = %ld", score);
+    [self transitToSeeScoreLayout];
+}
+
+- (void) increaseMyScoreBy:(NSInteger)ms TheirScoreBy:(NSInteger)ts
+{
+    //TODO: increase scores
+    
+    [self showScores];
 }
 
 #pragma mark - Layouts And Controls
@@ -238,6 +245,7 @@
     [gameView addSubview:b1];
     [gameView addSubview:b2];
     
+     __weak typeof(self) weakSelf = self;
     UILabel* l = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 500, 200)];
     l.transform = CGAffineTransformMake(1, 0, 0, 1, [self getScreenWidth]/2 - 160, [self getGameViewHeight]/2 - 150);
     l.font = [l.font fontWithSize:100.0];
@@ -245,11 +253,11 @@
     l.textColor = [UIColor whiteColor];
     [statusView addSubview:l];
     [self setNewGameViewPushAnimation:NULL additionalView:l completionBlock:^(void){
-        [self transformViewAnimated:l endTransform:CGAffineTransformMake(0.3, 0, 0, 0.3, -20, -50) completionBlock:^(void){
+        [weakSelf transformViewAnimated:l endTransform:CGAffineTransformMake(0.3, 0, 0, 0.3, -20, -50) completionBlock:^(void){
             // after the animation
-            if (![self isInOffendingTeam]) {
+            if (![weakSelf isInOffendingTeam]) {
                 // not our turn, go wait for question
-                [self transitFromNewTurnToWaitForQuestion];
+                [weakSelf transitFromNewTurnToWaitForQuestion];
             }
         }];
     }];
@@ -389,6 +397,11 @@
 
 - (void) transitToSeeScoreLayout
 {
+    NSLog(@"see sccore");
+}
+
+- (void) showScores
+{
     
 }
 
@@ -463,6 +476,16 @@
 }
 
 #pragma mark - Getters
+
+- (BOOL) isInTeamOne
+{
+    return TEAM;
+}
+
+- (BOOL) isCaptain
+{
+    return isCaptain;
+}
 
 - (BOOL) isInOffendingTeam
 {

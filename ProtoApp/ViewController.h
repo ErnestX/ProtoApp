@@ -30,15 +30,8 @@
  */
 - (BOOL) setQuestionAndStartTimer: (Colors)question;
 
-/*
- returns false if not in the offending team
- */
-- (BOOL) increaseMyScoreBy: (NSInteger)s;
 
-/*
- returns false if not in the defending team
- */
-- (BOOL) increaseTheirScoreBy: (NSInteger)s;
+- (void) increaseMyScoreBy: (NSInteger)ms TheirScoreBy:(NSInteger)ts;
 
 /*
  returns false if not assigned to any team
