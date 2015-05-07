@@ -30,7 +30,8 @@
 {
     UIGraphicsPushContext(ctx);
     
-    color = [UIColor colorWithHue: colorEnum * (1.0/12.0) saturation:1 brightness:1 alpha:1].CGColor;
+    //color = [UIColor colorWithHue: colorEnum * (1.0/12.0) saturation:1 brightness:1 alpha:1].CGColor;
+    color = [GlobalGetters uiColorFromColors:colorEnum].CGColor;
     CGContextSetFillColorWithColor(ctx, color);
     CGContextFillEllipseInRect(ctx, CGRectMake((self.frame.size.width - dotRadius*2.0)/2.0, (self.frame.size.width - dotRadius*2.0)/2.0, dotRadius*2.0, dotRadius*2.0));
     

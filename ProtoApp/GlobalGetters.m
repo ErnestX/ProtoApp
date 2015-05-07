@@ -31,9 +31,47 @@
     return [GlobalGetters getScreenHeight] - [GlobalGetters getStatusViewHeight];
 }
 
-+ (CGColorRef)cgcolorFromColors:(Colors)c
++ (UIColor*)uiColorFromColors:(Colors)c
 {
-    return [UIColor colorWithHue:c * (1.0/12.0) saturation:1 brightness:1 alpha:1].CGColor;
+//    return [UIColor colorWithHue:c * (1.0/12.0) saturation:1 brightness:1 alpha:1].CGColor;
+    switch (c) {
+        case 0:
+            return [UIColor colorWithHue:0.0/360.0 saturation:1 brightness:1 alpha:1];
+            break;
+        case 1:
+            return [UIColor colorWithHue:23.0/360.0 saturation:1 brightness:1 alpha:1];
+            break;
+        case 2:
+            return [UIColor colorWithHue:34.0/360.0 saturation:1 brightness:1 alpha:1];
+            break;
+        case 3:
+            return [UIColor colorWithHue:47.0/360.0 saturation:1 brightness:1 alpha:1];
+            break;
+        case 4:
+            return [UIColor colorWithHue:60.0/360.0 saturation:1 brightness:1 alpha:1];
+            break;
+        case 5:
+            return [UIColor colorWithHue:76.0/360.0 saturation:1 brightness:1 alpha:1];
+            break;
+        case 6:
+            return [UIColor colorWithHue:93.0/360.0 saturation:1 brightness:1 alpha:1];
+            break;
+        case 7:
+            return [UIColor colorWithHue:200.0/360.0 saturation:1 brightness:1 alpha:1];
+            break;
+        case 8:
+            return [UIColor colorWithHue:219.0/360.0 saturation:1 brightness:1 alpha:1];
+            break;
+        case 9:
+            return [UIColor colorWithHue:234.0/360.0 saturation:1 brightness:1 alpha:1];
+            break;
+        case 10:
+            return [UIColor colorWithHue:272.0/360.0 saturation:1 brightness:1 alpha:1];
+            break;
+        case 11:
+            return [UIColor colorWithHue:317.0/360.0 saturation:1 brightness:1 alpha:1];
+            break;
+    }
 }
 
 @end

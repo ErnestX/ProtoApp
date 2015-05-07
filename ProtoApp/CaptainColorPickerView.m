@@ -57,7 +57,8 @@
                 c.transform = CATransform3DRotate(c.transform, M_PI/6, 0, 0, 1);
                 c.transform = CATransform3DTranslate(c.transform, 0, -200, 0);
                 
-                c.backgroundColor = [UIColor colorWithHue:j * (1.0/12.0) saturation:1 brightness:1 alpha:1].CGColor;
+//                c.backgroundColor = [UIColor colorWithHue:j * (1.0/12.0) saturation:1 brightness:1 alpha:1].CGColor;
+                c.backgroundColor = [GlobalGetters uiColorFromColors:(Colors)j].CGColor;
             }
         }
         [CATransaction commit];

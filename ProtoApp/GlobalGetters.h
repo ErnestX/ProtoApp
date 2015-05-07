@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import "ColorsEnumType.h"
 
 @interface GlobalGetters : NSObject
@@ -15,5 +16,6 @@
 + (float)getScreenHeight;
 + (float)getScreenWidth;
 + (float)getGameViewHeight;
++ (UIColor*)uiColorFromColors:(Colors)c;
 
 @end

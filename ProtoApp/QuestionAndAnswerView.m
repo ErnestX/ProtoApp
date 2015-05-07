@@ -215,7 +215,8 @@
     
     card = [CALayer layer];
     card.frame = CGRectMake(sectionDividerXPos, 0, colorPicker.frame.size.width, [GlobalGetters getGameViewHeight]);
-    card.backgroundColor = [UIColor colorWithHue: selectedLayerColor * (1.0/12.0) saturation:1 brightness:1 alpha:1].CGColor;
+//    card.backgroundColor = [UIColor colorWithHue: selectedLayerColor * (1.0/12.0) saturation:1 brightness:1 alpha:1].CGColor;
+    card.backgroundColor = [GlobalGetters uiColorFromColors:selectedLayerColor].CGColor;
     [self.layer addSublayer:card];
     
     [dotSelected removeFromSuperlayer];
