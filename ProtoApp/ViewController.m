@@ -13,6 +13,7 @@
 #import "GlobalGetters.h"
 #import "CaptainColorPickerView.h"
 #import "QuestionAndAnswerView.h"
+#import "TimerView.h"
 
 @interface ViewController ()
 
@@ -296,6 +297,10 @@
     QuestionAndAnswerView* qaav = [[QuestionAndAnswerView alloc]customInit:question:self];
     [gameView addSubview: qaav];
     [qaav createAnswerSheet];
+    
+    TimerView* tv = [[TimerView alloc]initWithFrame:CGRectMake([GlobalGetters getScreenWidth] - 50, 30, 50, 50)];
+    [tv customInit];
+    [statusView addSubview:tv];
 }
 
 - (void) transitToSeeScoreLayout

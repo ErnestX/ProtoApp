@@ -22,6 +22,7 @@
 		CA027C0A1AF95EF200D2D9F6 /* GameView.m in Sources */ = {isa = PBXBuildFile; fileRef = CA027C091AF95EF200D2D9F6 /* GameView.m */; };
 		CA027C101AF9D3F600D2D9F6 /* GlobalGetters.m in Sources */ = {isa = PBXBuildFile; fileRef = CA027C0F1AF9D3F600D2D9F6 /* GlobalGetters.m */; };
 		CA027C161AFAE11F00D2D9F6 /* DotLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = CA027C151AFAE11F00D2D9F6 /* DotLayer.m */; };
+		CA027C1D1AFBE9A300D2D9F6 /* TimerView.m in Sources */ = {isa = PBXBuildFile; fileRef = CA027C1C1AFBE9A300D2D9F6 /* TimerView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +69,8 @@
 		CA027C0F1AF9D3F600D2D9F6 /* GlobalGetters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlobalGetters.m; sourceTree = "<group>"; };
 		CA027C141AFAE11F00D2D9F6 /* DotLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DotLayer.h; sourceTree = "<group>"; };
 		CA027C151AFAE11F00D2D9F6 /* DotLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DotLayer.m; sourceTree = "<group>"; };
+		CA027C1B1AFBE9A300D2D9F6 /* TimerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimerView.h; sourceTree = "<group>"; };
+		CA027C1C1AFBE9A300D2D9F6 /* TimerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimerView.m; sourceTree = "<group>"; };
 		FEA4EDF1D21035A981BF86B0 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -172,6 +175,8 @@
 				CA027BFD1AF94BC700D2D9F6 /* RoleView.m */,
 				CA027BFF1AF94BF700D2D9F6 /* ScoreView.h */,
 				CA027C001AF94BF700D2D9F6 /* ScoreView.m */,
+				CA027C1B1AFBE9A300D2D9F6 /* TimerView.h */,
+				CA027C1C1AFBE9A300D2D9F6 /* TimerView.m */,
 				CA027C021AF94C2100D2D9F6 /* StatusView.h */,
 				CA027C031AF94C2100D2D9F6 /* StatusView.m */,
 				CA027C081AF95EF200D2D9F6 /* GameView.h */,
@@ -328,6 +333,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CA027C1D1AFBE9A300D2D9F6 /* TimerView.m in Sources */,
 				CA027BD11AF82A5A00D2D9F6 /* ViewController.m in Sources */,
 				CA027BCE1AF82A5A00D2D9F6 /* AppDelegate.m in Sources */,
 				CA027C011AF94BF700D2D9F6 /* ScoreView.m in Sources */,

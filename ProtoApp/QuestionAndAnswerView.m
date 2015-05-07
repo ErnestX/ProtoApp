@@ -141,7 +141,9 @@
         [dotSelected setNeedsDisplay];
     } else {
         [displayLink invalidate];
-        // completion
+        
+        // stuff to do after the animaiton
+        
         // init buttons
         confirmButton = [UIButton buttonWithType:UIButtonTypeSystem];
         [confirmButton setTitle: @"Confirm" forState:UIControlStateNormal];
@@ -182,6 +184,7 @@
         [dotSelected setNeedsDisplay];
     } else {
         [displayLink invalidate];
+        // stuff to do after the animaiton
     }
 }
 
@@ -191,16 +194,10 @@
     UIView* gameView = [self superview];
     [[gameView superview] bringSubviewToFront:gameView];
     
-
-//    [CATransaction begin];
-//    [CATransaction setCompletionBlock:^(void){
-        [CATransaction begin];
-        [CATransaction setAnimationDuration:1.0];
-        card.position = CGPointMake(card.position.x, card.position.y - [GlobalGetters getScreenHeight]);
-        [CATransaction commit];
-//    }];
-//    
-//    [CATransaction commit];
+    [CATransaction begin];
+    [CATransaction setAnimationDuration:1.0];
+    card.position = CGPointMake(card.position.x, card.position.y - [GlobalGetters getScreenHeight]);
+    [CATransaction commit];
 }
 
 - (IBAction)confirmButtonDown:(id)sender
@@ -209,6 +206,7 @@
     [controller sendAnswerToQuestion:selectedLayerColor];
     [CATransaction begin];
     [CATransaction setCompletionBlock:^(void){
+        // make sure the animation runs only after the dot layer has been removed
         [confirmButton removeFromSuperview];
         [cancelButton removeFromSuperview];
         
@@ -222,8 +220,6 @@
     
     [dotSelected removeFromSuperlayer];
     [CATransaction commit];
-
-    isColorSelected = false;
 }
 
 - (IBAction)cancelButtonDown:(id)sender
