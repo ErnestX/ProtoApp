@@ -25,6 +25,7 @@
     Colors selectedLayerColor;
     UIButton* confirmButton;
     UIButton* cancelButton;
+    CALayer* card;
 }
 
 - (id)customInit:(Colors)color :(ViewController*)contr
@@ -124,21 +125,6 @@
     displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(selectDotAnimation)];
     [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
     
-    // init buttons
-    confirmButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [confirmButton setTitle: @"Confirm" forState:UIControlStateNormal];
-    [confirmButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    confirmButton.frame = CGRectMake(sectionDividerXPos + 40, [GlobalGetters getGameViewHeight]/2 - 50, 70, 50);
-    [confirmButton addTarget:self action:@selector(confirmButtonDown:) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:confirmButton];
-    
-    cancelButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [cancelButton setTitle: @"Cancel" forState:UIControlStateNormal];
-    [cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    cancelButton.frame = CGRectMake(sectionDividerXPos + 40, [GlobalGetters getGameViewHeight]/2 - 10, 70, 50);
-    [cancelButton addTarget:self action:@selector(cancelButtonDown:) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:cancelButton];
-    
     isColorSelected = true;
 }
 
@@ -147,7 +133,6 @@
  */
 - (void) selectDotAnimation
 {
-    NSLog(@"draw");
     if ([dotSelected getDotRaidus] < 600) {
         [dotSelected setDotRadius:[dotSelected getDotRaidus]+20];
         CGPoint position = dotSelected.position;
@@ -156,6 +141,21 @@
         [dotSelected setNeedsDisplay];
     } else {
         [displayLink invalidate];
+        // completion
+        // init buttons
+        confirmButton = [UIButton buttonWithType:UIButtonTypeSystem];
+        [confirmButton setTitle: @"Confirm" forState:UIControlStateNormal];
+        [confirmButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        confirmButton.frame = CGRectMake(sectionDividerXPos + 40, [GlobalGetters getGameViewHeight]/2 - 50, 70, 50);
+        [confirmButton addTarget:self action:@selector(confirmButtonDown:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:confirmButton];
+        
+        cancelButton = [UIButton buttonWithType:UIButtonTypeSystem];
+        [cancelButton setTitle: @"Cancel" forState:UIControlStateNormal];
+        [cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        cancelButton.frame = CGRectMake(sectionDividerXPos + 40, [GlobalGetters getGameViewHeight]/2 - 10, 70, 50);
+        [cancelButton addTarget:self action:@selector(cancelButtonDown:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:cancelButton];
     }
 }
 
@@ -164,7 +164,6 @@
  */
 - (void) unselectDotAnimation
 {
-    NSLog(@"undraw");
     if ([dotSelected getDotRaidus] > 50/1.5 - 5 + 1) {
         float newDotRadius;
         float newFrameSideLength;
@@ -186,10 +185,45 @@
     }
 }
 
+- (void) confirmAnimation
+{
+    // bring gameView to front for animation effect
+    UIView* gameView = [self superview];
+    [[gameView superview] bringSubviewToFront:gameView];
+    
+
+//    [CATransaction begin];
+//    [CATransaction setCompletionBlock:^(void){
+        [CATransaction begin];
+        [CATransaction setAnimationDuration:1.0];
+        card.position = CGPointMake(card.position.x, card.position.y - [GlobalGetters getScreenHeight]);
+        [CATransaction commit];
+//    }];
+//    
+//    [CATransaction commit];
+}
+
 - (IBAction)confirmButtonDown:(id)sender
 {
     NSLog(@"confirmed");
     [controller sendAnswerToQuestion:selectedLayerColor];
+    [CATransaction begin];
+    [CATransaction setCompletionBlock:^(void){
+        [confirmButton removeFromSuperview];
+        [cancelButton removeFromSuperview];
+        
+        [self confirmAnimation];
+    }];
+    
+    card = [CALayer layer];
+    card.frame = CGRectMake(sectionDividerXPos, 0, colorPicker.frame.size.width, [GlobalGetters getGameViewHeight]);
+    card.backgroundColor = [UIColor colorWithHue: selectedLayerColor * (1.0/12.0) saturation:1 brightness:1 alpha:1].CGColor;
+    [self.layer addSublayer:card];
+    
+    [dotSelected removeFromSuperlayer];
+    [CATransaction commit];
+
+    isColorSelected = false;
 }
 
 - (IBAction)cancelButtonDown:(id)sender
@@ -202,6 +236,9 @@
     [CATransaction commit];
     // restore zPos
     dotSelected.zPosition = selectedLayerZPosArchive;
+    
+    [confirmButton removeFromSuperview];
+    [cancelButton removeFromSuperview];
     
     isColorSelected = false;
 }

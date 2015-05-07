@@ -28,10 +28,8 @@
 
 - (void)drawInContext:(CGContextRef)ctx
 {
-    NSLog(@"drawing in context");
     UIGraphicsPushContext(ctx);
     
-//    CGContextAddArc(ctx, sideLength/2, sideLength/2, sideLength, 0, 0, 0);
     color = [UIColor colorWithHue: colorEnum * (1.0/12.0) saturation:1 brightness:1 alpha:1].CGColor;
     CGContextSetFillColorWithColor(ctx, color);
     CGContextFillEllipseInRect(ctx, CGRectMake((self.frame.size.width - dotRadius*2.0)/2.0, (self.frame.size.width - dotRadius*2.0)/2.0, dotRadius*2.0, dotRadius*2.0));
