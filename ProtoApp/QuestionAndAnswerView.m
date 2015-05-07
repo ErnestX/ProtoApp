@@ -17,6 +17,7 @@
     CALayer* colorPicker;
     float sectionDividerXPos;
     float stepSize;
+    BOOL colorSelected;
 }
 
 - (id)customInit:(Colors)color :(ViewController*)contr
@@ -28,6 +29,7 @@
     sectionDividerXPos = [GlobalGetters getScreenWidth] - ([GlobalGetters getGameViewHeight]/4.0*3.0/1.5);
     stepSize = [GlobalGetters getGameViewHeight] / 4.0 /1.5 - 17;
     question = color;
+    colorSelected = false;
     
     colorPicker = [CALayer layer];
     colorPicker.frame = CGRectMake(sectionDividerXPos, [GlobalGetters getGameViewHeight]/3.0/2.0, [GlobalGetters getGameViewHeight]/4*3/1.5, [GlobalGetters getGameViewHeight]/1.5);
@@ -38,7 +40,6 @@
 
 - (void)createAnswerSheet
 {
-    
     // bring gameview to front for animations.
     UIView* gameView = [self superview];
     [[gameView superview] bringSubviewToFront:gameView];
@@ -82,6 +83,33 @@
     quesLayer.frame = CGRectMake(0, -1*[GlobalGetters getScreenHeight], sectionDividerXPos, [GlobalGetters getGameViewHeight]);
     quesLayer.backgroundColor = [UIColor colorWithHue: question * (1.0/12.0) saturation:1 brightness:1 alpha:1].CGColor;
     [self.layer addSublayer:quesLayer];
+    [CATransaction commit];
+}
+
+- (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    NSLog(@"touches began");
+    [super touchesBegan:touches withEvent:event];
+    CGPoint touchPoint = [(UITouch*)[touches anyObject] locationInView:self];
+    
+    if (!colorSelected) {
+        for (CALayer* dot in colorPicker.sublayers) {
+            if ([dot.modelLayer containsPoint:[dot convertPoint:touchPoint fromLayer:self.layer]]) {
+                [self colorSelected:dot];
+            }
+        }
+    }
+}
+
+- (void)colorSelected:(CALayer*) dot
+{
+    NSLog(@"color selected");
+    [CATransaction begin];
+    dot.anchorPoint = CGPointMake(0.5, 0.5);
+    dot.transform = CATransform3DMakeTranslation(dot.frame.size.width/2, dot.frame.size.height/2, 0);
+
+    
+    
     [CATransaction commit];
 }
 
