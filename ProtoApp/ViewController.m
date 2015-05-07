@@ -59,7 +59,7 @@
 {
     assignedTeam = false;
     turn = 0;
-    maxScorePossible = 20;
+    maxScorePossible = 10;
 }
 
 #pragma mark - Actions
@@ -217,10 +217,11 @@
     [b1 addTarget:self action:@selector(startNewRound) forControlEvents:UIControlEventTouchUpInside];
     [newGv addSubview:b1];
     
+    __weak typeof(self) weakSelf = self;
     TeamView* tv = [[TeamView alloc]customInitWithTeam:isInTeamOne];
     tv.transform = CGAffineTransformMake(1, 0, 0, 1, [self getScreenWidth]/2 - 160, [self getGameViewHeight]/2 - 150);
     [statusView addSubview:tv];
-    [self setNewGameViewPushAnimation:newGv additionalView:tv completionBlock:^(void) {
+    [weakSelf setNewGameViewPushAnimation:newGv additionalView:tv completionBlock:^(void) {
         [gameView removeFromSuperview];
         gameView = newGv;
         [self transformViewAnimated:tv endTransform:CGAffineTransformMake(0.3, 0, 0, 0.3, -150, -50) completionBlock:^(void){}];
