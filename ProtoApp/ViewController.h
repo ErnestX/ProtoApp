@@ -60,7 +60,7 @@
 /*
  this method is not to be called by network
  */
-- (void) sendAnswerToQuestion: (Colors) color;
+- (void) answerSentForQuestion: (Colors) color;
 
 @end
 

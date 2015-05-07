@@ -31,4 +31,9 @@
     return [GlobalGetters getScreenHeight] - [GlobalGetters getStatusViewHeight];
 }
 
++ (CGColorRef)cgcolorFromColors:(Colors)c
+{
+    return [UIColor colorWithHue:c * (1.0/12.0) saturation:1 brightness:1 alpha:1].CGColor;
+}
+
 @end

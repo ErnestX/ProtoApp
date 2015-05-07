@@ -10,7 +10,7 @@
 
 @interface TimerView : UIView
 
-- (void)customInit;
+- (void)customInit:(NSInteger)time;
 - (void)tick;
 - (NSInteger) getCurrentTime;
 

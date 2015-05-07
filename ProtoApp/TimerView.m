@@ -14,9 +14,9 @@
     UILabel* timeLabel;
 }
 
-- (void)customInit
+- (void)customInit:(NSInteger)time
 {
-    currentTime = 10;
+    currentTime = time;
     
     timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 40, 40)];
     timeLabel.textColor = [UIColor whiteColor];

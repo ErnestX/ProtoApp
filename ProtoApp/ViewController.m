@@ -23,12 +23,21 @@
 {
     StatusView* statusView;
     GameView* gameView;
+    TimerView* timerView;
     BOOL TEAM;
     BOOL isCaptain;
     BOOL assignedTeam;
     NSInteger turn;
     UIButton* b1;
     UIButton* b2;
+    
+    NSTimer* tickTimer;
+    NSTimer* timer;
+    
+    Colors questionPickedByCaptain;
+    Colors answerProposed;
+    
+    NSInteger maxScorePossible; // used as the time the player have
 }
 
 - (void)viewDidLoad {
@@ -49,6 +58,7 @@
 {
     assignedTeam = false;
     turn = 0;
+    maxScorePossible = 20;
 }
 
 #pragma mark - Actions
@@ -98,11 +108,38 @@
     }
 }
 
-- (void) sendAnswerToQuestion:(Colors)color
+- (void) answerSentForQuestion:(Colors)color
 {
     NSLog(@"answer chosen: %d", color);
-    // TODO: Call network
+    answerProposed = color;
+    [self stopTimer];
     [self transitToSeeScoreLayout];
+}
+
+- (void) stopTimer
+{
+    // stop all timers
+    [tickTimer invalidate];
+    [timer invalidate];
+    
+    NSLog(@"question:%ld | answer:%ld",questionPickedByCaptain, answerProposed);
+    
+    NSInteger rawScore = [timerView getCurrentTime]; // rawScore: the time left
+    NSInteger score;
+    // if correct, uses rawScore. Else, uses the worst score
+    if (abs(questionPickedByCaptain - answerProposed) == 6) {
+        // correct!
+        NSLog(@"correct");
+        score = rawScore;
+        // TODO: send score to network
+    } else {
+        // wrong
+        NSLog(@"wrong");
+        score = 0;
+        // TODO: send score to network
+    }
+    
+    NSLog(@"score = %ld", score);
 }
 
 #pragma mark - Layouts And Controls
@@ -292,15 +329,21 @@
     }
 }
 
-- (void) transitFromWaitForQuestionToAnswerQuestionLayout:(Colors)question
+- (void) transitFromWaitForQuestionToAnswerQuestionLayout:(Colors)q
 {
-    QuestionAndAnswerView* qaav = [[QuestionAndAnswerView alloc]customInit:question:self];
+    questionPickedByCaptain = q;
+    
+    QuestionAndAnswerView* qaav = [[QuestionAndAnswerView alloc]customInit:q:self];
     [gameView addSubview: qaav];
     [qaav createAnswerSheet];
     
-    TimerView* tv = [[TimerView alloc]initWithFrame:CGRectMake([GlobalGetters getScreenWidth] - 50, 30, 50, 50)];
-    [tv customInit];
-    [statusView addSubview:tv];
+    timerView = [[TimerView alloc]initWithFrame:CGRectMake([GlobalGetters getScreenWidth] - 50, 30, 50, 50)];
+    [timerView customInit:maxScorePossible];
+    [statusView addSubview:timerView];
+    
+    // schedule timers
+    tickTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:timerView selector:@selector(tick) userInfo:nil repeats:true];
+    timer = [NSTimer scheduledTimerWithTimeInterval:maxScorePossible target:self selector:@selector(stopTimer) userInfo:nil repeats:false];
 }
 
 - (void) transitToSeeScoreLayout

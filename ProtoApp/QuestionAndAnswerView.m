@@ -203,7 +203,7 @@
 - (IBAction)confirmButtonDown:(id)sender
 {
     NSLog(@"confirmed");
-    [controller sendAnswerToQuestion:selectedLayerColor];
+    [controller answerSentForQuestion:selectedLayerColor];
     [CATransaction begin];
     [CATransaction setCompletionBlock:^(void){
         // make sure the animation runs only after the dot layer has been removed
