@@ -18,8 +18,8 @@
     
     CALayer* selectedCard;
     NSInteger selectedCardIndex;
-    CATransform3D selectedCardTransform;
-    float selectedCardZPosition;
+    CATransform3D selectedCardTransformArchive;
+    float selectedCardZPositionArchive;
     
     UIButton* confirmButton;
     
@@ -91,8 +91,8 @@
 - (void) colorSelected:(CALayer*)card
 {
     selectedCardIndex = [colorRing.sublayers indexOfObject:card];
-    selectedCardTransform = card.transform;
-    selectedCardZPosition = card.zPosition;
+    selectedCardTransformArchive = card.transform;
+    selectedCardZPositionArchive = card.zPosition;
     
     selectedCard = card;
     card.zPosition = 100;
@@ -119,8 +119,8 @@
 
 - (void)unselectColor
 {
-    selectedCard.transform = selectedCardTransform;
-    selectedCard.zPosition = selectedCardZPosition;
+    selectedCard.transform = selectedCardTransformArchive;
+    selectedCard.zPosition = selectedCardZPositionArchive;
     [confirmButton removeFromSuperview];
     colorSelected = false;
 }
@@ -136,7 +136,7 @@
     selectedCard.position = CGPointMake(selectedCard.position.x, selectedCard.position.y - 800);
     [CATransaction commit];
     Colors colorPicked = [self getColorByIndex:selectedCardIndex];
-    [controller sendColorPickedByCaptain:colorPicked];
+    [controller sendColorPicked:colorPicked];
 }
 
 - (Colors)getColorByIndex: (NSInteger) index

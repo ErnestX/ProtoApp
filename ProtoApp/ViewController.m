@@ -80,7 +80,7 @@
     }
 }
 
-- (void) sendColorPickedByCaptain:(Colors) color
+- (void) sendColorPicked:(Colors) color
 {
     NSLog(@"color chosen: %d", color);
     //TODO: Call network

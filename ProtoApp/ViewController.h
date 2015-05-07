@@ -55,7 +55,7 @@
 /*
  this method is not to be called by network
  */
-- (void) sendColorPickedByCaptain:(Colors) color;
+- (void) sendColorPicked:(Colors) color;
 
 /*
  this method is not to be called by network

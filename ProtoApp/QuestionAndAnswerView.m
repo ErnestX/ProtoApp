@@ -17,11 +17,11 @@
     CALayer* colorPicker;
     float sectionDividerXPos;
     float stepSize;
-    BOOL colorSelected;
+    BOOL isColorSelected;
     CADisplayLink* displayLink;
     float dotAnimationSideLength;
-    DotLayer* layerSelected;
-    float selectedLayerZPos;
+    DotLayer* dotSelected;
+    float selectedLayerZPosArchive;
     Colors selectedLayerColor;
     UIButton* confirmButton;
     UIButton* cancelButton;
@@ -36,7 +36,7 @@
     sectionDividerXPos = [GlobalGetters getScreenWidth] - ([GlobalGetters getGameViewHeight]/4.0*3.0/1.5);
     stepSize = [GlobalGetters getGameViewHeight] / 4.0 /1.5 - 17;
     question = color;
-    colorSelected = false;
+    isColorSelected = false;
     
     colorPicker = [CALayer layer];
     colorPicker.frame = CGRectMake(sectionDividerXPos, [GlobalGetters getGameViewHeight]/3.0/2.0, [GlobalGetters getGameViewHeight]/4*3/1.5, [GlobalGetters getGameViewHeight]/1.5);
@@ -99,7 +99,7 @@
     [super touchesBegan:touches withEvent:event];
     CGPoint touchPoint = [(UITouch*)[touches anyObject] locationInView:self];
     
-    if (!colorSelected) {
+    if (!isColorSelected) {
         for (DotLayer* dot in colorPicker.sublayers) {
             if ([dot.modelLayer containsPoint:[dot convertPoint:touchPoint fromLayer:self.layer]]) {
                 [self colorSelected:dot];
@@ -111,41 +111,80 @@
 - (void)colorSelected:(DotLayer*) dot
 {
     // send gameview to back for animations.
-    UIView* gameView = [self superview];
-    [[gameView superview] sendSubviewToBack:gameView];
+//    UIView* gameView = [self superview];
+//    [[gameView superview] sendSubviewToBack:gameView];
     
-    layerSelected = dot;
-    selectedLayerColor = (Colors)[colorPicker.sublayers indexOfObject:layerSelected];
+    dotSelected = dot;
+    selectedLayerColor = (Colors)[colorPicker.sublayers indexOfObject:dotSelected];
+    selectedLayerZPosArchive = dotSelected.zPosition;
     NSLog(@"color selected");
-    [CATransaction begin];
+//    [CATransaction begin];
+    
+    // run animation
+    dotSelected.zPosition = 100;
     dot.anchorPoint = CGPointMake(0.5, 0.5);
     dot.transform = CATransform3DMakeTranslation(dot.frame.size.width/2, dot.frame.size.height/2, 0);
-
-    // run animation
     displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(selectDotAnimation)];
     [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
-    [CATransaction commit];
+//    [CATransaction commit];
     
     // init buttons
     confirmButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [confirmButton setTitle: @"Confirm" forState:UIControlStateNormal];
     [confirmButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    confirmButton.frame = CGRectMake(sectionDividerXPos + 20, [GlobalGetters getGameViewHeight]/2 - 30, 70, 50);
+    confirmButton.frame = CGRectMake(sectionDividerXPos + 40, [GlobalGetters getGameViewHeight]/2 - 50, 70, 50);
     [confirmButton addTarget:self action:@selector(confirmButtonDown:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:confirmButton];
     
-    colorSelected = true;
+    cancelButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [cancelButton setTitle: @"Cancel" forState:UIControlStateNormal];
+    [cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    cancelButton.frame = CGRectMake(sectionDividerXPos + 40, [GlobalGetters getGameViewHeight]/2 - 10, 70, 50);
+    [cancelButton addTarget:self action:@selector(cancelButtonDown:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:cancelButton];
+    
+    isColorSelected = true;
 }
 
+/*
+ to be called by CADisplayLink
+ */
 - (void) selectDotAnimation
 {
     NSLog(@"draw");
-    if ([layerSelected getDotRaidus] < 600) {
-        [layerSelected setDotRadius:[layerSelected getDotRaidus]+20];
-        CGPoint position = layerSelected.position;
-        layerSelected.frame = CGRectMake(0,0,layerSelected.frame.size.width + 40, layerSelected.frame.size.height + 40);
-        layerSelected.position = position;
-        [layerSelected setNeedsDisplay];
+    if ([dotSelected getDotRaidus] < 600) {
+        [dotSelected setDotRadius:[dotSelected getDotRaidus]+20];
+        CGPoint position = dotSelected.position;
+        dotSelected.frame = CGRectMake(0,0,dotSelected.frame.size.width + 40, dotSelected.frame.size.height + 40);
+        dotSelected.position = position;
+        [dotSelected setNeedsDisplay];
+    } else {
+        [displayLink invalidate];
+    }
+}
+
+/*
+ to be called by CADisplayLink
+ */
+- (void) unselectDotAnimation
+{
+    NSLog(@"undraw");
+    if ([dotSelected getDotRaidus] > 50/1.5 - 5 + 1) {
+        float newDotRadius;
+        float newFrameSideLength;
+        if ([dotSelected getDotRaidus] > 50/1.5 - 5 + 21) {
+            newDotRadius = [dotSelected getDotRaidus]-20;
+            newFrameSideLength = dotSelected.frame.size.width - 40;
+        } else {
+            newDotRadius = 50/1.5 - 5;
+            newFrameSideLength = [GlobalGetters getGameViewHeight]/4/1.5;
+        }
+        
+        [dotSelected setDotRadius:newDotRadius];
+        CGPoint position = dotSelected.position;
+        dotSelected.frame = CGRectMake(0,0,newFrameSideLength, newFrameSideLength);
+        dotSelected.position = position;
+        [dotSelected setNeedsDisplay];
     } else {
         [displayLink invalidate];
     }
@@ -157,9 +196,20 @@
     [controller sendAnswerToQuestion:selectedLayerColor];
 }
 
-- (void) unselectDotAnimation
+- (IBAction)cancelButtonDown:(id)sender
 {
+    NSLog(@"canceled");
+    // run animation
+    [CATransaction begin];
+    dotSelected.anchorPoint = CGPointMake(0, 0);
+    dotSelected.transform = CATransform3DMakeTranslation(0, 0, 0);
+    displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(unselectDotAnimation)];
+    [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+    [CATransaction commit];
+    // restore zPos
+    dotSelected.zPosition = selectedLayerZPosArchive;
     
+    isColorSelected = false;
 }
 
 @end
