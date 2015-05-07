@@ -18,6 +18,13 @@
     float sectionDividerXPos;
     float stepSize;
     BOOL colorSelected;
+    CADisplayLink* displayLink;
+    float dotAnimationSideLength;
+    DotLayer* layerSelected;
+    float selectedLayerZPos;
+    Colors selectedLayerColor;
+    UIButton* confirmButton;
+    UIButton* cancelButton;
 }
 
 - (id)customInit:(Colors)color :(ViewController*)contr
@@ -93,7 +100,7 @@
     CGPoint touchPoint = [(UITouch*)[touches anyObject] locationInView:self];
     
     if (!colorSelected) {
-        for (CALayer* dot in colorPicker.sublayers) {
+        for (DotLayer* dot in colorPicker.sublayers) {
             if ([dot.modelLayer containsPoint:[dot convertPoint:touchPoint fromLayer:self.layer]]) {
                 [self colorSelected:dot];
             }
@@ -101,16 +108,58 @@
     }
 }
 
-- (void)colorSelected:(CALayer*) dot
+- (void)colorSelected:(DotLayer*) dot
 {
+    // send gameview to back for animations.
+    UIView* gameView = [self superview];
+    [[gameView superview] sendSubviewToBack:gameView];
+    
+    layerSelected = dot;
+    selectedLayerColor = (Colors)[colorPicker.sublayers indexOfObject:layerSelected];
     NSLog(@"color selected");
     [CATransaction begin];
     dot.anchorPoint = CGPointMake(0.5, 0.5);
     dot.transform = CATransform3DMakeTranslation(dot.frame.size.width/2, dot.frame.size.height/2, 0);
 
-    
-    
+    // run animation
+    displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(selectDotAnimation)];
+    [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
     [CATransaction commit];
+    
+    // init buttons
+    confirmButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [confirmButton setTitle: @"Confirm" forState:UIControlStateNormal];
+    [confirmButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    confirmButton.frame = CGRectMake(sectionDividerXPos + 20, [GlobalGetters getGameViewHeight]/2 - 30, 70, 50);
+    [confirmButton addTarget:self action:@selector(confirmButtonDown:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:confirmButton];
+    
+    colorSelected = true;
+}
+
+- (void) selectDotAnimation
+{
+    NSLog(@"draw");
+    if ([layerSelected getDotRaidus] < 600) {
+        [layerSelected setDotRadius:[layerSelected getDotRaidus]+20];
+        CGPoint position = layerSelected.position;
+        layerSelected.frame = CGRectMake(0,0,layerSelected.frame.size.width + 40, layerSelected.frame.size.height + 40);
+        layerSelected.position = position;
+        [layerSelected setNeedsDisplay];
+    } else {
+        [displayLink invalidate];
+    }
+}
+
+- (IBAction)confirmButtonDown:(id)sender
+{
+    NSLog(@"confirmed");
+    [controller sendAnswerToQuestion:selectedLayerColor];
+}
+
+- (void) unselectDotAnimation
+{
+    
 }
 
 @end

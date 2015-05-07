@@ -136,7 +136,7 @@
     selectedCard.position = CGPointMake(selectedCard.position.x, selectedCard.position.y - 800);
     [CATransaction commit];
     Colors colorPicked = [self getColorByIndex:selectedCardIndex];
-    [controller sendColorPicked:colorPicked];
+    [controller sendColorPickedByCaptain:colorPicked];
 }
 
 - (Colors)getColorByIndex: (NSInteger) index

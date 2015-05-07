@@ -26,7 +26,7 @@
 - (void) drawRect:(CGRect)rect
 {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
-    CGContextSetStrokeColorWithColor(ctx, [UIColor lightGrayColor].CGColor);
+    CGContextSetStrokeColorWithColor(ctx, [UIColor whiteColor].CGColor);
     
     CGPoint arr[2];
     arr[0] = CGPointMake(0, self.frame.size.height - 1);

@@ -80,7 +80,7 @@
     }
 }
 
-- (void) sendColorPicked:(Colors) color
+- (void) sendColorPickedByCaptain:(Colors) color
 {
     NSLog(@"color chosen: %d", color);
     //TODO: Call network
@@ -95,6 +95,13 @@
     } else {
         return false;
     }
+}
+
+- (void) sendAnswerToQuestion:(Colors)color
+{
+    NSLog(@"answer chosen: %d", color);
+    // TODO: Call network
+    [self transitToSeeScoreLayout];
 }
 
 #pragma mark - Layouts And Controls
