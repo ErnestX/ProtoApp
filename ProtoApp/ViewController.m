@@ -260,6 +260,7 @@
  */
 - (BOOL) transitFromNewTurnToCaptainAssignLayout
 {
+    __weak typeof(self) weakSelf = self;
     if ([self isInOffendingTeam]) {
         UILabel* l = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 500, 200)];
         l.transform = CGAffineTransformMake(1, 0, 0, 1, [self getScreenWidth]/2 - 160, [self getGameViewHeight]/2 - 150);
@@ -271,8 +272,8 @@
             [statusView addSubview:l];
             
             [self setNewGameViewPushAnimation:NULL additionalView:l completionBlock:^(void){
-                [self transformViewAnimated:l endTransform:CGAffineTransformMake(0.3, 0, 0, 0.3, 110, -50) completionBlock:^(void) {
-                    [self transitFromCaptainAssignToCaptainPickColorLayout]; // go straight ahead
+                [weakSelf transformViewAnimated:l endTransform:CGAffineTransformMake(0.3, 0, 0, 0.3, 110, -50) completionBlock:^(void) {
+                    [weakSelf transitFromCaptainAssignToCaptainPickColorLayout]; // go straight ahead
                 }];
             }];
         } else {
@@ -280,8 +281,8 @@
             [statusView addSubview:l];
             
             [self setNewGameViewPushAnimation:NULL additionalView:l completionBlock:^(void){
-                [self transformViewAnimated:l endTransform:CGAffineTransformMake(0.3, 0, 0, 0.3, 110, -50) completionBlock:^(void) {
-                    [self transitFromCaptainAssignToWaitForCaptainLayout]; // go ahead
+                [weakSelf transformViewAnimated:l endTransform:CGAffineTransformMake(0.3, 0, 0, 0.3, 110, -50) completionBlock:^(void) {
+                    [weakSelf transitFromCaptainAssignToWaitForCaptainLayout]; // go ahead
                 }];
             }];
         }
