@@ -15,6 +15,8 @@
 #import "QuestionAndAnswerView.h"
 #import "TimerView.h"
 
+#define HOST_NAME @"http://128.189.239.107:8080/ProtoApp/"
+
 @interface ViewController ()
 
 @end
@@ -93,8 +95,24 @@
 
 - (void) sendColorPicked:(Colors) color
 {
+    AFHTTPRequestOperationManager *mgr = [AFHTTPRequestOperationManager manager];
     NSLog(@"color chosen: %d", color);
-    //TODO: Call network
+
+    NSString *path = [NSString stringWithFormat:@"%@%@", HOST_NAME, @"ChooseColorServlet"];
+    NSDictionary *params = @{@"color_chosen" : [NSNumber numberWithInt:color],
+                             @"is_from_captain" : [NSNumber numberWithBool:YES]};
+    
+    __weak typeof(self) weakSelf = self;
+    [mgr POST:path
+   parameters:params
+      success:^(AFHTTPRequestOperation *operation, id responseObject) {
+          NSLog(@"captain submitted color successful");
+          //TOOD: enter waiting page (wait for the answering team to finish)
+      }
+      failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+          NSLog(@"error code: %ld", (long)operation.response.statusCode);
+      }];
+    
     [self transitToSeeScoreLayout];
 }
 
@@ -172,7 +190,7 @@
 - (IBAction)comfirmationSwitchOn:(id) sender
 {
     if (((UISwitch*)sender).on) {
-//        ((UISwitch*)sender).enabled = FALSE;
+        ((UISwitch*)sender).enabled = FALSE;
         NSLog(@"ready");
         // TODO: call readyToStartGame
         [self connectMyself];
@@ -303,8 +321,6 @@
  */
 - (BOOL) transitFromNewTurnToWaitForQuestion
 {
-    if (![self isInOffendingTeam]) {
-        
         // buttons for testing
         [b1 removeFromSuperview];
         [b2 removeFromSuperview];
@@ -321,12 +337,36 @@
         
         [gameView addSubview:b1];
         [gameView addSubview:b2];
-        
-        NSLog(@"wait for the question");
-        return true;
-    } else {
-        return false;
-    }
+
+    NSLog(@"waiting for the question");
+    
+    AFHTTPRequestOperationManager *mgr = [AFHTTPRequestOperationManager manager];
+    NSString *path = [NSString stringWithFormat:@"%@%@", HOST_NAME, @"ChooseColorServlet"];
+    NSDictionary *params = @{@"is_from_captain" : [NSNumber numberWithBool:NO]};
+    
+    __weak typeof(self) weakSelf = self;
+    [mgr POST:path
+   parameters:params
+      success:^(AFHTTPRequestOperation *operation, id responseObject) {
+          
+          NSNumber *temp = (NSNumber *)[responseObject objectForKey:@"is_color_ready"];
+          BOOL isReady = [temp boolValue];
+          if (isReady){
+              NSNumber *colorID = (NSNumber *)[responseObject objectForKey:@"color_id"];
+              Colors question = [colorID integerValue];
+              NSLog(@"question is color: %d", question);
+              // TODO: enter next page for this team to anwer the question
+              
+          } else {
+              [weakSelf transitFromNewTurnToWaitForQuestion];
+          }
+          
+      }
+      failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+          NSLog(@"error code: %ld", (long)operation.response.statusCode);
+      }];
+    
+    return true;
 }
 
 - (void) transitFromWaitForQuestionToAnswerQuestionLayout:(Colors)q
@@ -447,20 +487,34 @@
 
 - (void) connectMyself {
 //    NSString *path = @"http://localhost:8080/ProtoApp/ConnectServlet";
-    NSString *path = @"http://128.189.239.107:8080/ProtoApp/ConnectServlet";
+    NSString *path = [NSString stringWithFormat:@"%@%@", HOST_NAME, @"ConnectServlet"];
     
     AFHTTPRequestOperationManager *mgr = [AFHTTPRequestOperationManager manager];
     NSString *uid = [[UIDevice currentDevice] identifierForVendor].UUIDString;
     NSDictionary *params = @{@"uid" : uid};
+    
+    
+    __weak typeof(self) weakSelf = self;
     [mgr POST:path
    parameters:params
       success:^(AFHTTPRequestOperation *operation, id responseObject) {
-
-          [self putInTeam:(int)responseObject[@"team_num"] == 1];
-          [self startNewRound];
-          [self assignRole:(bool)responseObject[@"is_captain"]];
+          NSNumber *temp = (NSNumber *)[responseObject objectForKey:@"is_ready"];
+          BOOL isReady = [temp boolValue];
+          if (isReady){
+              NSNumber *teamNumber = (NSNumber *)[responseObject objectForKey:@"team_num"];
+              [weakSelf putInTeam:[teamNumber isEqualToNumber:[NSNumber numberWithInt:1]]];
+              
+              [weakSelf startNewRound];
+              
+              NSNumber *cap = (NSNumber *)[responseObject objectForKey:@"is_captain"];
+              BOOL isCap = [cap boolValue];
+              [weakSelf assignRole:isCap];
+              NSLog(@"connect myself successful");
+              return;
+          } else {
+              [weakSelf connectMyself];
+          }
           
-          NSLog(@"connect myself successful");
       }
       failure:^(AFHTTPRequestOperation *operation, NSError *error) {
           NSLog(@"error code: %ld", (long)operation.response.statusCode);
