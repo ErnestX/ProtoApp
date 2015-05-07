@@ -11,6 +11,7 @@
 
 @interface QuestionAndAnswerView : UIView
 
-- (id)customInit:(ViewController*)contr;
+- (id)customInit:(Colors)color :(ViewController*)contr;
+- (void)createAnswerSheet;
 
 @end

@@ -21,6 +21,7 @@
 		CA027C071AF94C5900D2D9F6 /* QuestionAndAnswerView.m in Sources */ = {isa = PBXBuildFile; fileRef = CA027C061AF94C5900D2D9F6 /* QuestionAndAnswerView.m */; };
 		CA027C0A1AF95EF200D2D9F6 /* GameView.m in Sources */ = {isa = PBXBuildFile; fileRef = CA027C091AF95EF200D2D9F6 /* GameView.m */; };
 		CA027C101AF9D3F600D2D9F6 /* GlobalGetters.m in Sources */ = {isa = PBXBuildFile; fileRef = CA027C0F1AF9D3F600D2D9F6 /* GlobalGetters.m */; };
+		CA027C161AFAE11F00D2D9F6 /* DotLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = CA027C151AFAE11F00D2D9F6 /* DotLayer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +66,8 @@
 		CA027C091AF95EF200D2D9F6 /* GameView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameView.m; sourceTree = "<group>"; };
 		CA027C0E1AF9D3F600D2D9F6 /* GlobalGetters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlobalGetters.h; sourceTree = "<group>"; };
 		CA027C0F1AF9D3F600D2D9F6 /* GlobalGetters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlobalGetters.m; sourceTree = "<group>"; };
+		CA027C141AFAE11F00D2D9F6 /* DotLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DotLayer.h; sourceTree = "<group>"; };
+		CA027C151AFAE11F00D2D9F6 /* DotLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DotLayer.m; sourceTree = "<group>"; };
 		FEA4EDF1D21035A981BF86B0 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -175,6 +178,8 @@
 				CA027C091AF95EF200D2D9F6 /* GameView.m */,
 				CA027BF91AF94B7800D2D9F6 /* CaptainColorPickerView.h */,
 				CA027BFA1AF94B7800D2D9F6 /* CaptainColorPickerView.m */,
+				CA027C141AFAE11F00D2D9F6 /* DotLayer.h */,
+				CA027C151AFAE11F00D2D9F6 /* DotLayer.m */,
 				CA027C051AF94C5900D2D9F6 /* QuestionAndAnswerView.h */,
 				CA027C061AF94C5900D2D9F6 /* QuestionAndAnswerView.m */,
 			);
@@ -328,6 +333,7 @@
 				CA027C011AF94BF700D2D9F6 /* ScoreView.m in Sources */,
 				CA027BFB1AF94B7800D2D9F6 /* CaptainColorPickerView.m in Sources */,
 				CA027BF71AF948F000D2D9F6 /* TeamView.m in Sources */,
+				CA027C161AFAE11F00D2D9F6 /* DotLayer.m in Sources */,
 				CA027C071AF94C5900D2D9F6 /* QuestionAndAnswerView.m in Sources */,
 				CA027C101AF9D3F600D2D9F6 /* GlobalGetters.m in Sources */,
 				CA027C0A1AF95EF200D2D9F6 /* GameView.m in Sources */,

@@ -286,7 +286,9 @@
 
 - (void) transitFromWaitForQuestionToAnswerQuestionLayout:(Colors)question
 {
-    [gameView addSubview:[[QuestionAndAnswerView alloc]customInit:self]];
+    QuestionAndAnswerView* qaav = [[QuestionAndAnswerView alloc]customInit:question:self];
+    [gameView addSubview: qaav];
+    [qaav createAnswerSheet];
 }
 
 - (void) transitToSeeScoreLayout
