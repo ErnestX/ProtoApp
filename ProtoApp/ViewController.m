@@ -116,7 +116,7 @@
 - (IBAction)comfirmationSwitchOn:(id) sender
 {
     if (((UISwitch*)sender).on) {
-//        ((UISwitch*)sender).enabled = FALSE;
+        ((UISwitch*)sender).enabled = FALSE;
         NSLog(@"ready");
         // TODO: call readyToStartGame
         [self connectMyself];
@@ -362,18 +362,32 @@
     AFHTTPRequestOperationManager *mgr = [AFHTTPRequestOperationManager manager];
     NSString *uid = [[UIDevice currentDevice] identifierForVendor].UUIDString;
     NSDictionary *params = @{@"uid" : uid};
+    
+    
+    __weak typeof(self) weakSelf = self;
     [mgr POST:path
    parameters:params
       success:^(AFHTTPRequestOperation *operation, id responseObject) {
-
-          [self putInTeam:(int)responseObject[@"team_num"] == 1];
-          [self startNewRound];
-          [self assignRole:(bool)responseObject[@"is_captain"]];
+          NSNumber *temp = (NSNumber *)[responseObject objectForKey:@"is_ready"];
+          BOOL isReady = [temp boolValue];
+          if (isReady){
+              NSNumber *teamNumber = (NSNumber *)[responseObject objectForKey:@"team_num"];
+              [weakSelf putInTeam:[teamNumber isEqualToNumber:[NSNumber numberWithInt:1]]];
+              
+              [weakSelf startNewRound];
+              
+              NSNumber *cap = (NSNumber *)[responseObject objectForKey:@"is_captain"];
+              BOOL isCap = [cap boolValue];
+              [weakSelf assignRole:isCap];
+              NSLog(@"connect myself successful");
+              return;
+          } else {
+              [weakSelf connectMyself];
+          }
           
-          NSLog(@"connect myself successful");
       }
       failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-          NSLog(@"error code: %d", operation.response.statusCode);
+          NSLog(@"error code: %ld", (long)operation.response.statusCode);
       }];
     
 }
