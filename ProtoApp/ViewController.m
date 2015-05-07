@@ -13,6 +13,8 @@
 #import "GlobalGetters.h"
 #import "CaptainColorPickerView.h"
 
+#define HOST_NAME @"http://128.189.239.107:8080/ProtoApp/"
+
 @interface ViewController ()
 
 @end
@@ -81,8 +83,24 @@
 
 - (void) sendColorPicked:(Colors) color
 {
+    AFHTTPRequestOperationManager *mgr = [AFHTTPRequestOperationManager manager];
     NSLog(@"color chosen: %d", color);
-    //TODO: Call network
+
+    NSString *path = [NSString stringWithFormat:@"%@%@", HOST_NAME, @"ChooseColorServlet"];
+    NSDictionary *params = @{@"color_chosen" : [NSNumber numberWithInt:color],
+                             @"is_from_captain" : [NSNumber numberWithBool:YES]};
+    
+    __weak typeof(self) weakSelf = self;
+    [mgr POST:path
+   parameters:params
+      success:^(AFHTTPRequestOperation *operation, id responseObject) {
+          NSLog(@"captain submitted color successful");
+          //TOOD: enter waiting page (wait for the answering team to finish)
+      }
+      failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+          NSLog(@"error code: %ld", (long)operation.response.statusCode);
+      }];
+    
     [self transitToSeeScoreLayout];
 }
 
@@ -247,7 +265,34 @@
  */
 - (BOOL) transitFromNewTurnToWaitForQuestion
 {
-    NSLog(@"wait for the question");
+    NSLog(@"waiting for the question");
+    
+    AFHTTPRequestOperationManager *mgr = [AFHTTPRequestOperationManager manager];
+    NSString *path = [NSString stringWithFormat:@"%@%@", HOST_NAME, @"ChooseColorServlet"];
+    NSDictionary *params = @{@"is_from_captain" : [NSNumber numberWithBool:NO]};
+    
+    __weak typeof(self) weakSelf = self;
+    [mgr POST:path
+   parameters:params
+      success:^(AFHTTPRequestOperation *operation, id responseObject) {
+          
+          NSNumber *temp = (NSNumber *)[responseObject objectForKey:@"is_color_ready"];
+          BOOL isReady = [temp boolValue];
+          if (isReady){
+              NSNumber *colorID = (NSNumber *)[responseObject objectForKey:@"color_id"];
+              Colors question = [colorID integerValue];
+              NSLog(@"question is color: %d", question);
+              // TODO: enter next page for this team to anwer the question
+              
+          } else {
+              [weakSelf transitFromNewTurnToWaitForQuestion];
+          }
+          
+      }
+      failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+          NSLog(@"error code: %ld", (long)operation.response.statusCode);
+      }];
+    
     return true;
 }
 
@@ -357,7 +402,7 @@
 
 - (void) connectMyself {
 //    NSString *path = @"http://localhost:8080/ProtoApp/ConnectServlet";
-    NSString *path = @"http://128.189.239.107:8080/ProtoApp/ConnectServlet";
+    NSString *path = [NSString stringWithFormat:@"%@%@", HOST_NAME, @"ConnectServlet"];
     
     AFHTTPRequestOperationManager *mgr = [AFHTTPRequestOperationManager manager];
     NSString *uid = [[UIDevice currentDevice] identifierForVendor].UUIDString;
