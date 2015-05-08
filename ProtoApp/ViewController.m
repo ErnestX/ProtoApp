@@ -62,7 +62,7 @@
 {
     assignedTeam = false;
     turn = 0;
-    maxScorePossible = 10;
+    maxScorePossible = 20;
     myScore = 0;
     theirScore = 0;
     numberOfRounds = 2;
@@ -155,7 +155,7 @@
     NSInteger score;
     
     // if correct, uses rawScore. Else, uses the worst score
-    if ((questionPickedByCaptain - answerProposed) == 6) {
+    if (abs(questionPickedByCaptain - answerProposed) == 6) {
         // correct!
         NSLog(@"correct");
         score = maxScorePossible - rawScore;
@@ -588,9 +588,10 @@
 {
     NSLog(@"game over");
     
-    UILabel* l = [[UILabel alloc]initWithFrame:CGRectMake(430, 240, 300, 100)];
-    l.text = @"game over";
+    UILabel* l = [[UILabel alloc]initWithFrame:CGRectMake(380, 240, 350, 100)];
+    l.text = @"GAME OVER";
     l.textColor = [UIColor whiteColor];
+    l.font = [l.font fontWithSize:50.0];
     [gameView addSubview:l];
 }
 
