@@ -502,6 +502,7 @@
 
 - (void) showScores
 {
+    
     for (UIView* v in gameView.subviews) {
         [v removeFromSuperview];
     }
@@ -509,7 +510,12 @@
     UILabel* l = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 50)];
     l.textColor = [UIColor whiteColor];
     l.text = [NSString stringWithFormat:@"Our Score: %ld | Their Score: %ld", (long)myScore, (long)theirScore];
+    l.alpha = 0;
     [gameView addSubview:l];
+    
+    [UIView beginAnimations:@"animation" context:nil];
+    l.alpha = 1;
+    [UIView commitAnimations];
 }
 
 - (void) transitFromSeeScoreToEndGameLayout
