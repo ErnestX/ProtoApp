@@ -432,7 +432,8 @@
  */
 - (void) setNewGameViewPushAnimation:(GameView*) newGameView additionalView:(UIView*)otherView completionBlock:(void (^)(void))completionBlock
 {
-    [self.view insertSubview:newGameView atIndex:0]; // put at buttom
+    [self.view insertSubview:newGameView atIndex:1]; // put at buttom
+    //[self.view addSubview:newGameView]; // put at the front
     
     CABasicAnimation *animation1 = [CABasicAnimation animation];
     animation1.keyPath = @"position.x";
