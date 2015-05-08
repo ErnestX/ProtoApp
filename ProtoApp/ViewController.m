@@ -76,8 +76,12 @@
 - (BOOL) startNewRound
 {
     if (assignedTeam) {
-        turn += 1;
-        [self transitToNewTurnLayout];
+        if (turn <2) {
+            turn += 1;
+            [self transitToNewTurnLayout];
+        } else {
+            [self endGame];
+        }
         return true;
     } else {
         return false;
@@ -230,8 +234,13 @@
     
     [self performSelector:@selector(showScores)
                withObject:NULL
-               afterDelay:2.0];
+               afterDelay:1.0];
 //    [self showScores];
+}
+
+- (void) endGame
+{
+    [self transitFromSeeScoreToEndGameLayout];
 }
 
 #pragma mark - Layouts And Controls
@@ -568,17 +577,24 @@
     }
     [UIView commitAnimations];
     [CATransaction commit];
+    
+    [self performSelector:@selector(startNewRound) withObject:NULL afterDelay:2];
 }
 
 - (void) transitFromSeeScoreToEndGameLayout
 {
+    NSLog(@"game over");
     
+    UILabel* l = [[UILabel alloc]initWithFrame:CGRectMake(430, 240, 300, 100)];
+    l.text = @"game over";
+    l.textColor = [UIColor whiteColor];
+    [gameView addSubview:l];
 }
 
-- (void) transitFromSeeScoreToNewTurnLayout
-{
-    [self transitToNewTurnLayout];
-}
+//- (void) transitFromSeeScoreToNewTurnLayout
+//{
+//    [self transitToNewTurnLayout];
+//}
 
 #pragma mark - Transition Helpers
 
