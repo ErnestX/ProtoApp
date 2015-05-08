@@ -311,15 +311,18 @@
     [b1 setTitle: @"Captain" forState:UIControlStateNormal];
     b1.frame = CGRectMake([self getScreenWidth] - 170, [self getGameViewHeight] - 40, 150, 50);
     [b1 addTarget:self action:@selector(assignAsCaptain) forControlEvents:UIControlEventTouchUpInside];
-    
     [b2 removeFromSuperview];
     b2 = [UIButton buttonWithType:UIButtonTypeSystem];
     [b2 setTitle: @"Minion" forState:UIControlStateNormal];
     b2.frame = CGRectMake([self getScreenWidth] - 60, [self getGameViewHeight] - 40, 70, 50);
     [b2 addTarget:self action:@selector(assignAsMinion) forControlEvents:UIControlEventTouchUpInside];
-    
     [gameView addSubview:b1];
     [gameView addSubview:b2];
+    
+    
+    
+    [statusView.turnView removeFromSuperview];
+    [statusView.roleView removeFromSuperview];
     
      __weak typeof(self) weakSelf = self;
     UILabel* turnV = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 500, 200)];
@@ -481,9 +484,13 @@
 {
     NSLog(@"see sccore");
     
+    [timerView removeFromSuperview];
+    [statusView.scoreView removeFromSuperview];
+    
     GameView* newGv = [[GameView alloc]customInit];
     
     [b1 removeFromSuperview];
+    
     [b2 removeFromSuperview];
     b2 = [UIButton buttonWithType:UIButtonTypeSystem];
     [b2 setTitle: @"show" forState:UIControlStateNormal];
@@ -519,6 +526,14 @@
         for (UIView* v in gameView.subviews) {
             [v removeFromSuperview];
         }
+        
+        b1 = [UIButton buttonWithType:UIButtonTypeSystem];
+        [b1 setTitle: @"StartsNewRound" forState:UIControlStateNormal];
+        b1.frame = CGRectMake([self getScreenWidth] - 150, [self getGameViewHeight] - 40, 150, 50);
+        [b1 addTarget:self action:@selector(startNewRound) forControlEvents:UIControlEventTouchUpInside];
+        [gameView addSubview:b1];
+        
+        
         UILabel* scoreV = [[UILabel alloc] initWithFrame:CGRectMake(200, 200, 500, 200)];
         scoreV.textColor = [UIColor whiteColor];
         scoreV.text = [NSString stringWithFormat:@"Our Score: %ld | Their Score: %ld", (long)myScore, (long)theirScore];
@@ -553,7 +568,7 @@
 
 - (void) transitFromSeeScoreToNewTurnLayout
 {
-    
+    [self transitFromTeamAssignmentToNewTurnLayout];
 }
 
 #pragma mark - Transition Helpers
