@@ -160,7 +160,6 @@
         score = maxScorePossible - 0;
     }
     
-    // TODO: send score back to server
     NSString *path = [NSString stringWithFormat:@"%@%@", HOST_NAME, @"ScoreServlet"];
     NSDictionary *params = @{@"is_questioning" : [NSNumber numberWithBool:NO],
                              @"is_waiting" : [NSNumber numberWithBool:NO],
@@ -176,7 +175,7 @@
           BOOL isReady = [temp boolValue];
           if (isReady) {
               double avgScore = [(NSNumber *)[responseObject objectForKey:@"avg_score"] doubleValue];
-              [weakSelf increaseMyScoreBy:0 TheirScoreBy:floor(avgScore)];
+              [weakSelf increaseMyScoreBy:0 TheirScoreBy:avgScore];
               
               NSLog(@"score = %ld", (long)score);
               return;
@@ -210,8 +209,8 @@
           if (isReady){
               double avgScore = [(NSNumber *)[responseObject objectForKey:@"avg_score"] doubleValue];
               if (TEAM)
-                  [weakSelf increaseMyScoreBy:floor(avgScore) TheirScoreBy:0];
-              else [weakSelf increaseMyScoreBy:0 TheirScoreBy:floor(avgScore)];
+                  [weakSelf increaseMyScoreBy:avgScore TheirScoreBy:0];
+              else [weakSelf increaseMyScoreBy:0 TheirScoreBy:avgScore];
               return;
 
               
@@ -396,6 +395,7 @@
 - (BOOL) transitFromCaptainAssignToWaitForCaptainLayout
 {
     NSLog(@"wait for the captain");
+    [self waitForScore];
     return true;
 }
 
