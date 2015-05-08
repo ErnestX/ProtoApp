@@ -144,6 +144,7 @@
     
     NSInteger rawScore = [timerView getCurrentTime]; // rawScore: the time left
     NSInteger score;
+    
     // if correct, uses rawScore. Else, uses the worst score
     if ((questionPickedByCaptain - answerProposed) == 6) {
         // correct!
@@ -156,9 +157,32 @@
     }
     
     // TODO: send score back to server
+    NSString *path = [NSString stringWithFormat:@"%@%@", HOST_NAME, @"ScoreServlet"];
+    NSDictionary *params = @{@"is_questioning" : [NSNumber numberWithBool:NO],
+                             @"is_waiting" : [NSNumber numberWithBool:NO],
+                             @"my_score" : [NSNumber numberWithInt:score]};
+
+    AFHTTPRequestOperationManager *mgr = [AFHTTPRequestOperationManager manager];
+    __weak typeof(self) weakSelf = self;
+
+    [mgr POST:path
+   parameters:params
+      success:^(AFHTTPRequestOperation *operation, id responseObject) {
+          // if avg score is ready, display it in the next page
+          // else send wait request
+      }
+      failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+          NSLog(@"error code: %ld", (long)operation.response.statusCode);
+      }];
     
     NSLog(@"score = %ld", (long)score);
     [self transitToSeeScoreLayout];
+}
+
+- (void) waitForScoreFor {
+    /// TODO: DECLARE & IMPLEMENT WAIT FOR SORE REQUEST CALL
+    ///
+    /// A;SDLFKJALS;DFKJAS;DLKJFASDF
 }
 
 - (void) increaseMyScoreBy:(NSInteger)ms TheirScoreBy:(NSInteger)ts
