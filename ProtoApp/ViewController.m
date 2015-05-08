@@ -29,6 +29,8 @@
     BOOL isCaptain;
     BOOL assignedTeam;
     NSInteger turn;
+    NSInteger numberOfRounds;
+    
     UIButton* b1;
     UIButton* b2;
     
@@ -63,6 +65,7 @@
     maxScorePossible = 10;
     myScore = 0;
     theirScore = 0;
+    numberOfRounds = 2;
 }
 
 #pragma mark - Actions
@@ -76,7 +79,7 @@
 - (BOOL) startNewRound
 {
     if (assignedTeam) {
-        if (turn <2) {
+        if (turn < numberOfRounds) {
             turn += 1;
             [self transitToNewTurnLayout];
         } else {
@@ -590,11 +593,6 @@
     l.textColor = [UIColor whiteColor];
     [gameView addSubview:l];
 }
-
-//- (void) transitFromSeeScoreToNewTurnLayout
-//{
-//    [self transitToNewTurnLayout];
-//}
 
 #pragma mark - Transition Helpers
 
