@@ -11,7 +11,7 @@
 #import "DotLayer.h"
 #import "ColorsEnumType.h"
 
-@implementation QuestionAndAnswerView{
+@implementation QuestionAndAnswerView {
     Colors question;
     ViewController* controller;
     CALayer* colorPicker;
@@ -131,14 +131,14 @@
     confirmButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [confirmButton setTitle: @"Confirm" forState:UIControlStateNormal];
     [confirmButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    confirmButton.frame = CGRectMake(sectionDividerXPos + 60, [GlobalGetters getGameViewHeight]/2 - 50, 70, 50);
+    confirmButton.frame = CGRectMake(sectionDividerXPos + 130, [GlobalGetters getGameViewHeight]/2 - 50, 70, 50);
     [confirmButton addTarget:self action:@selector(confirmButtonDown:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:confirmButton];
     
     cancelButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [cancelButton setTitle: @"Cancel" forState:UIControlStateNormal];
     [cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    cancelButton.frame = CGRectMake(sectionDividerXPos + 60, [GlobalGetters getGameViewHeight]/2 - 10, 70, 50);
+    cancelButton.frame = CGRectMake(sectionDividerXPos + 130, [GlobalGetters getGameViewHeight]/2 - 10, 70, 50);
     [cancelButton addTarget:self action:@selector(cancelButtonDown:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:cancelButton];
     
@@ -159,8 +159,8 @@
 
 - (IBAction)confirmButtonDown:(id)sender
 {
-    NSLog(@"confirmed");
     [controller answerSentForQuestion:selectedLayerColor];
+    
     [CATransaction begin];
     [CATransaction setCompletionBlock:^(void){
         // make sure the animation runs only after the dot layer has been removed
@@ -176,12 +176,12 @@
     [self.layer addSublayer:card];
     
     [dotSelected removeFromSuperlayer];
+    
     [CATransaction commit];
 }
 
 - (IBAction)cancelButtonDown:(id)sender
 {
-    NSLog(@"canceled");
     // run animation
     dotSelected.transform = selectedLayerTransformArchive;
 

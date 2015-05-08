@@ -93,7 +93,7 @@
     
     selectedCard = card;
     card.zPosition = 100;
-    CATransform3D tempTrans = CATransform3DMakeScale(8.1, 3, 1);
+    CATransform3D tempTrans = CATransform3DMakeScale(8.1, 4, 1);
     card.transform = CATransform3DTranslate(tempTrans, 0, 66.5, 0);
     
     confirmButton = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -130,7 +130,7 @@
     
     [CATransaction begin];
     [CATransaction setAnimationDuration:1];
-    selectedCard.position = CGPointMake(selectedCard.position.x, selectedCard.position.y - 800);
+    selectedCard.position = CGPointMake(selectedCard.position.x, selectedCard.position.y - 900);
     [CATransaction commit];
     Colors colorPicked = [self getColorByIndex:selectedCardIndex];
     [controller sendColorPicked:colorPicked];

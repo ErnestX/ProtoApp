@@ -31,7 +31,7 @@
     [self addSublayer:d];
     [d setNeedsDisplay];
     
-    self.transform = CATransform3DMakeScale(0.04, 0.04, 0.04);
+    self.transform = CATransform3DMakeScale(0.05, 0.05, 0.05);
 }
 
 @end
