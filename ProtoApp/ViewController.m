@@ -78,11 +78,7 @@
 {
     if (assignedTeam) {
         turn += 1;
-        if (turn == 1) {
-            [self transitFromTeamAssignmentToNewTurnLayout];
-        } else {
-            [self transitFromSeeScoreToNewTurnLayout];
-        }
+        [self transitToNewTurnLayout];
         return true;
     } else {
         return false;
@@ -304,7 +300,7 @@
 
 #pragma mark NewTurn
 
-- (void) transitFromTeamAssignmentToNewTurnLayout
+- (void) transitToNewTurnLayout
 {
     [b1 removeFromSuperview];
     b1 = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -323,6 +319,8 @@
     
     [statusView.turnView removeFromSuperview];
     [statusView.roleView removeFromSuperview];
+    questionPickedByCaptain = 100;
+    answerProposed = 100;
     
      __weak typeof(self) weakSelf = self;
     UILabel* turnV = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 500, 200)];
@@ -404,6 +402,16 @@
  */
 - (BOOL) transitFromCaptainAssignToWaitForCaptainLayout
 {
+    UILabel* l = [[UILabel alloc]initWithFrame:CGRectMake(430, 240, 300, 100)];
+    l.text = @"waiting for the captain";
+    l.textColor = [UIColor whiteColor];
+    [gameView addSubview:l];
+    
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    spinner.center  = CGPointMake([GlobalGetters getScreenWidth]/2, [GlobalGetters getGameViewHeight]/2);
+    [gameView addSubview:spinner];
+    [spinner startAnimating];
+    
     NSLog(@"wait for the captain");
     return true;
 }
@@ -504,10 +512,10 @@
     l.text = @"waiting for the scores";
     l.textColor = [UIColor whiteColor];
     [newGv addSubview:l];
+    
     UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     spinner.center  = CGPointMake([GlobalGetters getScreenWidth]/2, [GlobalGetters getGameViewHeight]/2);
     [newGv addSubview:spinner];
-    
     [spinner startAnimating];
     
      __weak typeof(self) weakSelf = self;
@@ -533,6 +541,7 @@
         [b1 addTarget:self action:@selector(startNewRound) forControlEvents:UIControlEventTouchUpInside];
         [gameView addSubview:b1];
         
+        [statusView.scoreView removeFromSuperview];
         
         UILabel* scoreV = [[UILabel alloc] initWithFrame:CGRectMake(200, 200, 500, 200)];
         scoreV.textColor = [UIColor whiteColor];
@@ -544,7 +553,7 @@
         
         [CATransaction begin];
         [CATransaction setCompletionBlock:^(void){
-            [self transformViewAnimated:scoreV endTransform:CGAffineTransformMake(0.7, 0, 0, 0.7, 100, -250) completionBlock:^(void){}];
+            [self transformViewAnimated:scoreV endTransform:CGAffineTransformMake(0.7, 0, 0, 0.7, 150, -250) completionBlock:^(void){}];
         }];
         [UIView beginAnimations:@"fade in" context:nil];
         scoreV.alpha = 1;
@@ -568,7 +577,7 @@
 
 - (void) transitFromSeeScoreToNewTurnLayout
 {
-    [self transitFromTeamAssignmentToNewTurnLayout];
+    [self transitToNewTurnLayout];
 }
 
 #pragma mark - Transition Helpers
