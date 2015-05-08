@@ -7,12 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TimerView.h"
+#import "TeamView.h"
 
 @interface StatusView : UIView
-@property UIView* teamView;
+@property TeamView* teamView;
 @property UIView* turnView;
 @property UIView* roleView;
 @property UIView* scoreView;
+@property TimerView* timerView;
 
 - (id) customInit;
 

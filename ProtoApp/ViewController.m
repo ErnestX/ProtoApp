@@ -25,7 +25,6 @@
 {
     StatusView* statusView;
     GameView* gameView;
-    TimerView* timerView;
     BOOL TEAM;
     BOOL isCaptain;
     BOOL assignedTeam;
@@ -145,7 +144,7 @@
     
     NSLog(@"question:%u | answer:%u",questionPickedByCaptain, answerProposed);
     
-    NSInteger rawScore = [timerView getCurrentTime]; // rawScore: the time left
+    NSInteger rawScore = [statusView.timerView getCurrentTime]; // rawScore: the time left
     NSInteger score;
     
     // if correct, uses rawScore. Else, uses the worst score
@@ -479,12 +478,13 @@
     [gameView addSubview: qaav];
     [qaav createAnswerSheet];
     
-    timerView = [[TimerView alloc]initWithFrame:CGRectMake([GlobalGetters getScreenWidth] - 50, 30, 50, 50)];
-    [timerView customInit:maxScorePossible];
-    [statusView addSubview:timerView];
+    TimerView* timerV = [[TimerView alloc]initWithFrame:CGRectMake([GlobalGetters getScreenWidth] - 50, 30, 50, 50)];
+    [timerV customInit:maxScorePossible];
+    [statusView addSubview:timerV];
+    statusView.timerView = timerV;
     
     // schedule timers
-    tickTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:timerView selector:@selector(tick) userInfo:nil repeats:true];
+    tickTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:timerV selector:@selector(tick) userInfo:nil repeats:true];
     timer = [NSTimer scheduledTimerWithTimeInterval:maxScorePossible target:self selector:@selector(stopTimer) userInfo:nil repeats:false];
 }
 
@@ -492,7 +492,7 @@
 {
     NSLog(@"see sccore");
     
-    [timerView removeFromSuperview];
+    [statusView.timerView  removeFromSuperview];
     [statusView.scoreView removeFromSuperview];
     
     GameView* newGv = [[GameView alloc]customInit];

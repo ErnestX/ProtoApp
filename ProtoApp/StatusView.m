@@ -14,6 +14,7 @@
 @synthesize turnView;
 @synthesize roleView;
 @synthesize scoreView;
+@synthesize timerView;
 
 - (id) initWithFrame:(CGRect)frame
 {
