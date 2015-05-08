@@ -70,6 +70,9 @@
         case 11:
             return [UIColor colorWithHue:317.0/360.0 saturation:1 brightness:1 alpha:1];
             break;
+        default:
+            NSLog(@"global getter: not of type Colors (> 11 or < 0)");
+            return nil;
     }
 }
 

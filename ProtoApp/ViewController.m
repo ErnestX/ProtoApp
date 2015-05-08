@@ -25,11 +25,11 @@
 {
     StatusView* statusView;
     GameView* gameView;
-    BOOL TEAM;
+    BOOL IS_IN_TEAM_ONE;
     BOOL isCaptain;
-    BOOL assignedTeam;
-    NSInteger turn;
-    NSInteger numberOfRounds;
+    BOOL alreadyAssignedTeam;
+    NSInteger turnNumber;
+    NSInteger totalNumberOfRounds;
     
     UIButton* b1;
     UIButton* b2;
@@ -60,27 +60,27 @@
 
 - (void) customInit
 {
-    assignedTeam = false;
-    turn = 0;
+    alreadyAssignedTeam = false;
+    turnNumber = 0;
     maxScorePossible = 20;
     myScore = 0;
     theirScore = 0;
-    numberOfRounds = 2;
+    totalNumberOfRounds = 2;
 }
 
 #pragma mark - Actions
 - (void) putInTeam:(BOOL)isInTeamOne
 {
-    TEAM = isInTeamOne;
-    assignedTeam = true; // this should be the only line that can modify assignedTeam
+    IS_IN_TEAM_ONE = isInTeamOne;
+    alreadyAssignedTeam = true; // this should be the only line that can modify assignedTeam
     [self transitFromComfirmationToTeamAssignmentLayout:isInTeamOne];
 }
 
 - (BOOL) startNewRound
 {
-    if (assignedTeam) {
-        if (turn < numberOfRounds) {
-            turn += 1;
+    if (alreadyAssignedTeam) {
+        if (turnNumber < totalNumberOfRounds) {
+            turnNumber += 1;
             [self transitToNewTurnLayout];
         } else {
             [self endGame];
@@ -122,7 +122,7 @@
           NSLog(@"error code: %ld", (long)operation.response.statusCode);
       }];
     
-    [self transitToSeeScoreLayout];
+    [self transitToSeeScoreLayoutWithQuestion:100 CorrectAnswer:100 MyAnswer:100];
 }
 
 - (BOOL) setQuestionAndStartTimer: (Colors)question
@@ -140,7 +140,6 @@
     NSLog(@"answer chosen: %d", color);
     answerProposed = color;
     [self stopTimer];
-    [self transitToSeeScoreLayout];
 }
 
 - (void) stopTimer
@@ -164,6 +163,8 @@
         NSLog(@"wrong");
         score = maxScorePossible - 0;
     }
+    
+    [self transitToSeeScoreLayoutWithQuestion:questionPickedByCaptain CorrectAnswer:abs(6 - questionPickedByCaptain) MyAnswer:answerProposed];
     
     NSString *path = [NSString stringWithFormat:@"%@%@", HOST_NAME, @"ScoreServlet"];
     NSDictionary *params = @{@"is_questioning" : [NSNumber numberWithBool:NO],
@@ -197,7 +198,7 @@
 - (void) waitForScore {
     
     NSString *path = [NSString stringWithFormat:@"%@%@", HOST_NAME, @"ScoreServlet"];
-    NSDictionary *params = @{@"is_questioning" : [NSNumber numberWithBool:TEAM],
+    NSDictionary *params = @{@"is_questioning" : [NSNumber numberWithBool:IS_IN_TEAM_ONE],
                              @"is_waiting" : [NSNumber numberWithBool:YES],
                              @"my_score" : [NSNumber numberWithInt:-1]};
     
@@ -211,7 +212,7 @@
           BOOL isReady = [temp boolValue];
           if (isReady){
               double avgScore = [(NSNumber *)[responseObject objectForKey:@"avg_score"] doubleValue];
-              if (TEAM)
+              if (IS_IN_TEAM_ONE)
                   [weakSelf increaseMyScoreBy:avgScore TheirScoreBy:0];
               else [weakSelf increaseMyScoreBy:0 TheirScoreBy:avgScore];
               return;
@@ -336,7 +337,7 @@
     UILabel* turnV = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 500, 200)];
     turnV.transform = CGAffineTransformMake(1, 0, 0, 1, [self getScreenWidth]/2 - 160, [self getGameViewHeight]/2 - 150);
     turnV.font = [turnV.font fontWithSize:100.0];
-    turnV.text = [NSString stringWithFormat:@"Turn %ld",(long)turn];
+    turnV.text = [NSString stringWithFormat:@"Turn %ld",(long)turnNumber];
     turnV.textColor = [UIColor whiteColor];
     [statusView addSubview:turnV];
     statusView.turnView = turnV;
@@ -500,7 +501,7 @@
     timer = [NSTimer scheduledTimerWithTimeInterval:maxScorePossible target:self selector:@selector(stopTimer) userInfo:nil repeats:false];
 }
 
-- (void) transitToSeeScoreLayout
+- (void) transitToSeeScoreLayoutWithQuestion:(Colors)q CorrectAnswer:(Colors)ca MyAnswer:(Colors)ma
 {
     NSLog(@"see sccore");
     
@@ -519,6 +520,25 @@
     
     [newGv addSubview:b2];
     
+    if (IS_IN_TEAM_ONE != turnNumber % 2) {
+        UILabel* question = [[UILabel alloc]initWithFrame:CGRectMake(300, 200, 300, 100)];
+        question.text = @"Question";
+        question.font = [UIFont fontWithName:@"HelveticaNeue-CondensedBold" size:30];
+        question.textColor = [GlobalGetters uiColorFromColors:q];
+        [newGv addSubview:question];
+        
+        UILabel* answer = [[UILabel alloc]initWithFrame:CGRectMake(440, 200, 300, 100)];
+        answer.text = @"AnswerKey";
+        answer.font = [UIFont fontWithName:@"HelveticaNeue-CondensedBold" size:30];
+        answer.textColor = [GlobalGetters uiColorFromColors:abs(q - 6)];
+        [newGv addSubview:answer];
+        
+        UILabel* myAnswer = [[UILabel alloc]initWithFrame:CGRectMake(600, 200, 300, 100)];
+        myAnswer.text = @"MyAnswer";
+        myAnswer.font = [UIFont fontWithName:@"HelveticaNeue-CondensedBold" size:30];
+        myAnswer.textColor = [GlobalGetters uiColorFromColors:ma];
+        [newGv addSubview:myAnswer];
+    }
     
     UILabel* l = [[UILabel alloc]initWithFrame:CGRectMake(430, 240, 300, 100)];
     l.text = @"waiting for the scores";
@@ -661,7 +681,7 @@
 
 - (BOOL) isInTeamOne
 {
-    return TEAM;
+    return IS_IN_TEAM_ONE;
 }
 
 - (BOOL) isCaptain
@@ -671,7 +691,7 @@
 
 - (BOOL) isInOffendingTeam
 {
-    return TEAM == ((turn % 2)==1);
+    return IS_IN_TEAM_ONE == ((turnNumber % 2)==1);
 }
 
 - (float) getGameViewHeight
