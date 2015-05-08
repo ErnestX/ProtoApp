@@ -298,6 +298,7 @@
     
     __weak typeof(self) weakSelf = self;
     TeamView* tv = [[TeamView alloc]customInitWithTeam:isInTeamOne];
+    
     tv.transform = CGAffineTransformMake(1, 0, 0, 1, [self getScreenWidth]/2 - 160, [self getGameViewHeight]/2 - 150);
     [statusView addSubview:tv];
     statusView.teamView = tv;
