@@ -22,6 +22,7 @@
     float dotAnimationSideLength;
     DotLayer* dotSelected;
     float selectedLayerZPosArchive;
+    CATransform3D selectedLayerTransformArchive;
     Colors selectedLayerColor;
     UIButton* confirmButton;
     UIButton* cancelButton;
@@ -127,12 +128,29 @@
     dotSelected = dot;
     selectedLayerColor = (Colors)[colorPicker.sublayers indexOfObject:dotSelected];
     selectedLayerZPosArchive = dotSelected.zPosition;
+    selectedLayerTransformArchive = dotSelected.transform;
     NSLog(@"color selected");
     
     // run animation
     dotSelected.zPosition = 100;
-    displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(selectDotAnimation)];
-    [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+//    displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(selectDotAnimation)];
+//    [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+    dotSelected.transform = CATransform3DMakeScale(1, 1, 1);
+    
+    // init buttons
+    confirmButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [confirmButton setTitle: @"Confirm" forState:UIControlStateNormal];
+    [confirmButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    confirmButton.frame = CGRectMake(sectionDividerXPos + 60, [GlobalGetters getGameViewHeight]/2 - 50, 70, 50);
+    [confirmButton addTarget:self action:@selector(confirmButtonDown:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:confirmButton];
+    
+    cancelButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [cancelButton setTitle: @"Cancel" forState:UIControlStateNormal];
+    [cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    cancelButton.frame = CGRectMake(sectionDividerXPos + 60, [GlobalGetters getGameViewHeight]/2 - 10, 70, 50);
+    [cancelButton addTarget:self action:@selector(cancelButtonDown:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:cancelButton];
     
     isColorSelected = true;
 }
@@ -140,8 +158,8 @@
 /*
  to be called by CADisplayLink
  */
-- (void) selectDotAnimation
-{
+//- (void) selectDotAnimation
+//{
 //    if ([dotSelected getDotRaidus] < 600) {
 //        [dotSelected setDotRadius:[dotSelected getDotRaidus]+20];
 //        CGPoint position = dotSelected.position;
@@ -154,21 +172,21 @@
         // stuff to do after the animaiton
         
         // init buttons
-        confirmButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        [confirmButton setTitle: @"Confirm" forState:UIControlStateNormal];
-        [confirmButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        confirmButton.frame = CGRectMake(sectionDividerXPos + 40, [GlobalGetters getGameViewHeight]/2 - 50, 70, 50);
-        [confirmButton addTarget:self action:@selector(confirmButtonDown:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:confirmButton];
-        
-        cancelButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        [cancelButton setTitle: @"Cancel" forState:UIControlStateNormal];
-        [cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        cancelButton.frame = CGRectMake(sectionDividerXPos + 40, [GlobalGetters getGameViewHeight]/2 - 10, 70, 50);
-        [cancelButton addTarget:self action:@selector(cancelButtonDown:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:cancelButton];
-//    }
-}
+//        confirmButton = [UIButton buttonWithType:UIButtonTypeSystem];
+//        [confirmButton setTitle: @"Confirm" forState:UIControlStateNormal];
+//        [confirmButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//        confirmButton.frame = CGRectMake(sectionDividerXPos + 40, [GlobalGetters getGameViewHeight]/2 - 50, 70, 50);
+//        [confirmButton addTarget:self action:@selector(confirmButtonDown:) forControlEvents:UIControlEventTouchUpInside];
+//        [self addSubview:confirmButton];
+//        
+//        cancelButton = [UIButton buttonWithType:UIButtonTypeSystem];
+//        [cancelButton setTitle: @"Cancel" forState:UIControlStateNormal];
+//        [cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//        cancelButton.frame = CGRectMake(sectionDividerXPos + 40, [GlobalGetters getGameViewHeight]/2 - 10, 70, 50);
+//        [cancelButton addTarget:self action:@selector(cancelButtonDown:) forControlEvents:UIControlEventTouchUpInside];
+//        [self addSubview:cancelButton];
+////    }
+//}
 
 /*
  to be called by CADisplayLink
@@ -235,10 +253,11 @@
 {
     NSLog(@"canceled");
     // run animation
-    [CATransaction begin];
-    displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(unselectDotAnimation)];
-    [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
-    [CATransaction commit];
+    dotSelected.transform = selectedLayerTransformArchive;
+//    [CATransaction begin];
+//    displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(unselectDotAnimation)];
+//    [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+//    [CATransaction commit];
     // restore zPos
     dotSelected.zPosition = selectedLayerZPosArchive;
     

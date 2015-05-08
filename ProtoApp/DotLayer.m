@@ -22,7 +22,7 @@
 - (void) customInit:(Colors)c
 {
     colorEnum = c;
-    sideLength = 600;//[GlobalGetters getGameViewHeight]/4/1.5;
+    sideLength = 1100;//[GlobalGetters getGameViewHeight]/4/1.5;
     //dotRadius = 600; //50/1.5 - 5;
     self.frame = CGRectMake(0, 0, sideLength, sideLength);
     //[self setContentsScale:[UIScreen mainScreen].scale];
@@ -34,7 +34,7 @@
     [self addSublayer:d];
     [d setNeedsDisplay];
     
-    self.transform = CATransform3DMakeScale(0.1, 0.1, 0.1);
+    self.transform = CATransform3DMakeScale(0.04, 0.04, 0.04);
 }
 
 //- (void)drawInContext:(CGContextRef)ctx
