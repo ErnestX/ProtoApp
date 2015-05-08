@@ -104,13 +104,13 @@
     NSString *path = [NSString stringWithFormat:@"%@%@", HOST_NAME, @"ChooseColorServlet"];
     NSDictionary *params = @{@"color_chosen" : [NSNumber numberWithInt:color],
                              @"is_from_captain" : [NSNumber numberWithBool:YES]};
-    
     __weak typeof(self) weakSelf = self;
+
     [mgr POST:path
    parameters:params
       success:^(AFHTTPRequestOperation *operation, id responseObject) {
           NSLog(@"captain submitted color successful");
-          [weakSelf transitToSeeScoreLayout];
+          [weakSelf waitForScore];
 
       }
       failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -179,7 +179,7 @@
               [weakSelf increaseMyScoreBy:0 TheirScoreBy:floor(avgScore)];
               
               NSLog(@"score = %ld", (long)score);
-              [weakSelf transitToSeeScoreLayout];
+              return;
               
               
           } else {
@@ -211,8 +211,8 @@
               double avgScore = [(NSNumber *)[responseObject objectForKey:@"avg_score"] doubleValue];
               if (TEAM)
                   [weakSelf increaseMyScoreBy:floor(avgScore) TheirScoreBy:0];
-              else [weakSelf increaseMyScoreBy:0 TheirScoreBy:floor(avgScore)];              
-              [weakSelf transitToSeeScoreLayout];
+              else [weakSelf increaseMyScoreBy:0 TheirScoreBy:floor(avgScore)];
+              return;
 
               
           } else {
@@ -224,16 +224,20 @@
           
       }];
 
-    
 }
 
 - (void) increaseMyScoreBy:(NSInteger)ms TheirScoreBy:(NSInteger)ts
 {
+    NSLog(@"loglogloglog");
+    
     // increase scores
     myScore += ms;
     theirScore += ts;
     
-    [self showScores];
+    [self performSelector:@selector(showScores)
+               withObject:NULL
+               afterDelay:2.0];
+//    [self showScores];
 }
 
 #pragma mark - Layouts And Controls
