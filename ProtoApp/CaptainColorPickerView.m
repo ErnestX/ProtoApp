@@ -76,7 +76,6 @@
     CGPoint touchPoint = [(UITouch*)[touches anyObject] locationInView:self];
     
     if (!isColorSelected) {
-        //for (CALayer* c in colorRing.sublayers) {
         for (NSInteger i = colorRing.sublayers.count-1; i >= 0; i--) { // make sure the card on top is chosen
             CALayer* c = [colorRing.sublayers objectAtIndex:i];
             if ([c.modelLayer containsPoint:[c convertPoint:touchPoint fromLayer:c.superlayer]]) {
