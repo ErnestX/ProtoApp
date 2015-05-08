@@ -91,7 +91,8 @@
         [CATransaction commit];
     }];
     quesLayer.frame = CGRectMake(0, -1*[GlobalGetters getScreenHeight], sectionDividerXPos, [GlobalGetters getGameViewHeight]);
-    quesLayer.backgroundColor = [UIColor colorWithHue: question * (1.0/12.0) saturation:1 brightness:1 alpha:1].CGColor;
+//    quesLayer.backgroundColor = [UIColor colorWithHue: question * (1.0/12.0) saturation:1 brightness:1 alpha:1].CGColor;
+    quesLayer.backgroundColor = [GlobalGetters uiColorFromColors:question].CGColor;
     [self.layer addSublayer:quesLayer];
     [CATransaction commit];
 }
