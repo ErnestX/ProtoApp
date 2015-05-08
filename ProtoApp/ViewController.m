@@ -110,7 +110,8 @@
    parameters:params
       success:^(AFHTTPRequestOperation *operation, id responseObject) {
           NSLog(@"captain submitted color successful");
-          //TOOD: enter waiting page (wait for the answering team to finish)
+          [weakSelf transitToSeeScoreLayout];
+
       }
       failure:^(AFHTTPRequestOperation *operation, NSError *error) {
           NSLog(@"error code: %ld", (long)operation.response.statusCode);
@@ -148,19 +149,19 @@
     NSInteger rawScore = [timerView getCurrentTime]; // rawScore: the time left
     NSInteger score;
     // if correct, uses rawScore. Else, uses the worst score
-    if (abs(questionPickedByCaptain - answerProposed) == 6) {
+    if ((questionPickedByCaptain - answerProposed) == 6) {
         // correct!
         NSLog(@"correct");
-        score = rawScore;
-        // TODO: send score to network
+        score = maxScorePossible - rawScore;
     } else {
         // wrong
         NSLog(@"wrong");
-        score = 0;
-        // TODO: send score to network
+        score = maxScorePossible - 0;
     }
     
-    NSLog(@"score = %ld", score);
+    // TODO: send score back to server
+    
+    NSLog(@"score = %ld", (long)score);
     [self transitToSeeScoreLayout];
 }
 
@@ -369,9 +370,10 @@
           BOOL isReady = [temp boolValue];
           if (isReady){
               NSNumber *colorID = (NSNumber *)[responseObject objectForKey:@"color_id"];
-              Colors question = [colorID integerValue];
+              Colors question = (Colors)[colorID integerValue];
               NSLog(@"question is color: %d", question);
-              // TODO: enter next page for this team to anwer the question
+              
+              [weakSelf transitFromWaitForQuestionToAnswerQuestionLayout:[colorID intValue]];
               
           } else {
               [weakSelf transitFromNewTurnToWaitForQuestion];
@@ -587,6 +589,10 @@
 - (void) whatIsTheComplimentOfBlue
 {
     [self setQuestionAndStartTimer:BLUE];
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    return UIStatusBarStyleLightContent;
 }
 
 @end
