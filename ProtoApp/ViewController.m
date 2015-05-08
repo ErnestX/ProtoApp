@@ -148,6 +148,7 @@
     
     NSInteger rawScore = [timerView getCurrentTime]; // rawScore: the time left
     NSInteger score;
+    
     // if correct, uses rawScore. Else, uses the worst score
     if ((questionPickedByCaptain - answerProposed) == 6) {
         // correct!
@@ -160,9 +161,70 @@
     }
     
     // TODO: send score back to server
+    NSString *path = [NSString stringWithFormat:@"%@%@", HOST_NAME, @"ScoreServlet"];
+    NSDictionary *params = @{@"is_questioning" : [NSNumber numberWithBool:NO],
+                             @"is_waiting" : [NSNumber numberWithBool:NO],
+                             @"my_score" : [NSNumber numberWithInt:score]};
+
+    AFHTTPRequestOperationManager *mgr = [AFHTTPRequestOperationManager manager];
+    __weak typeof(self) weakSelf = self;
+
+    [mgr POST:path
+   parameters:params
+      success:^(AFHTTPRequestOperation *operation, id responseObject) {
+          NSNumber *temp = (NSNumber *)[responseObject objectForKey:@"is_score_ready"];
+          BOOL isReady = [temp boolValue];
+          if (isReady) {
+              double avgScore = [(NSNumber *)[responseObject objectForKey:@"avg_score"] doubleValue];
+              [weakSelf increaseMyScoreBy:0 TheirScoreBy:floor(avgScore)];
+              
+              NSLog(@"score = %ld", (long)score);
+              [weakSelf transitToSeeScoreLayout];
+              
+              
+          } else {
+              [weakSelf waitForScore];
+          }
+      }
+      failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+          NSLog(@"error code: %ld", (long)operation.response.statusCode);
+      }];
     
-    NSLog(@"score = %ld", (long)score);
-    [self transitToSeeScoreLayout];
+}
+
+- (void) waitForScore {
+    
+    NSString *path = [NSString stringWithFormat:@"%@%@", HOST_NAME, @"ScoreServlet"];
+    NSDictionary *params = @{@"is_questioning" : [NSNumber numberWithBool:TEAM],
+                             @"is_waiting" : [NSNumber numberWithBool:YES],
+                             @"my_score" : [NSNumber numberWithInt:-1]};
+    
+    AFHTTPRequestOperationManager *mgr = [AFHTTPRequestOperationManager manager];
+    __weak typeof(self) weakSelf = self;
+    
+    [mgr POST:path
+   parameters:params
+      success:^(AFHTTPRequestOperation *operation, id responseObject) {
+          NSNumber *temp = (NSNumber *)[responseObject objectForKey:@"is_score_ready"];
+          BOOL isReady = [temp boolValue];
+          if (isReady){
+              double avgScore = [(NSNumber *)[responseObject objectForKey:@"avg_score"] doubleValue];
+              if (TEAM)
+                  [weakSelf increaseMyScoreBy:floor(avgScore) TheirScoreBy:0];
+              else [weakSelf increaseMyScoreBy:0 TheirScoreBy:floor(avgScore)];              
+              [weakSelf transitToSeeScoreLayout];
+
+              
+          } else {
+              [weakSelf waitForScore];
+          }
+      }
+      failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+          NSLog(@"error code: %ld", (long)operation.response.statusCode);
+          
+      }];
+
+    
 }
 
 - (void) increaseMyScoreBy:(NSInteger)ms TheirScoreBy:(NSInteger)ts
