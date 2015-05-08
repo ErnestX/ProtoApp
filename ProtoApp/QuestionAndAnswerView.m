@@ -152,14 +152,17 @@
     [[gameView superview] bringSubviewToFront:gameView];
     
     [CATransaction begin];
-    [CATransaction setAnimationDuration:1.0];
+    [CATransaction setCompletionBlock:^(void){
+       [controller answerSentForQuestion:selectedLayerColor]; // make sure the view transit after the animaiton is finished
+    }];
+    //[CATransaction setAnimationDuration:1.0];
     card.position = CGPointMake(card.position.x, card.position.y - [GlobalGetters getScreenHeight]);
     [CATransaction commit];
 }
 
 - (IBAction)confirmButtonDown:(id)sender
 {
-    [controller answerSentForQuestion:selectedLayerColor];
+//    [controller answerSentForQuestion:selectedLayerColor];
     
     [CATransaction begin];
     [CATransaction setCompletionBlock:^(void){

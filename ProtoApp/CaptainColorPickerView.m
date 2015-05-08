@@ -76,9 +76,12 @@
     CGPoint touchPoint = [(UITouch*)[touches anyObject] locationInView:self];
     
     if (!isColorSelected) {
-        for (CALayer* c in colorRing.sublayers) {
+        //for (CALayer* c in colorRing.sublayers) {
+        for (NSInteger i = colorRing.sublayers.count-1; i >= 0; i--) { // make sure the card on top is chosen
+            CALayer* c = [colorRing.sublayers objectAtIndex:i];
             if ([c.modelLayer containsPoint:[c convertPoint:touchPoint fromLayer:c.superlayer]]) {
                 [self colorSelected:c];
+                break;
             }
         }
     }
@@ -86,6 +89,8 @@
 
 - (void) colorSelected:(CALayer*)card
 {
+    isColorSelected = true;
+    
     selectedCardIndex = [colorRing.sublayers indexOfObject:card];
     selectedCardTransformArchive = card.transform;
     selectedCardZPositionArchive = card.zPosition;
@@ -110,8 +115,6 @@
     [self addSubview:cancelButton];
     
     NSLog(@"color selected %ld", (long)selectedCardIndex);
-    
-    isColorSelected = true;
 }
 
 - (IBAction)confirmButtonDown:(id)sender
@@ -138,10 +141,14 @@
     
     [CATransaction begin];
     [CATransaction setAnimationDuration:1];
+    [CATransaction setCompletionBlock:^(void){
+        // make sure the color is sent after the animation. 
+        Colors colorPicked = [self getColorByIndex:selectedCardIndex];
+        [controller sendColorPicked:colorPicked];
+    }];
     selectedCard.position = CGPointMake(selectedCard.position.x, selectedCard.position.y - 900);
     [CATransaction commit];
-    Colors colorPicked = [self getColorByIndex:selectedCardIndex];
-    [controller sendColorPicked:colorPicked];
+
 }
 
 - (Colors)getColorByIndex: (NSInteger) index

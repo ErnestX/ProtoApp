@@ -408,6 +408,23 @@
 - (void) transitToSeeScoreLayout
 {
     NSLog(@"see sccore");
+    
+    GameView* newGv = [[GameView alloc]customInit];
+    UILabel* l = [[UILabel alloc]initWithFrame:CGRectMake(430, 240, 300, 100)];
+    l.text = @"waiting for the scores";
+    l.textColor = [UIColor whiteColor];
+    [newGv addSubview:l];
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    spinner.center  = CGPointMake([GlobalGetters getScreenWidth]/2, [GlobalGetters getGameViewHeight]/2);
+    [newGv addSubview:spinner];
+    
+    [spinner startAnimating];
+    
+     __weak typeof(self) weakSelf = self;
+    [weakSelf setNewGameViewPushAnimation:newGv additionalView:nil completionBlock:^(void){
+        [gameView removeFromSuperview];
+        gameView = newGv;
+    }];
 }
 
 - (void) showScores
@@ -432,8 +449,8 @@
  */
 - (void) setNewGameViewPushAnimation:(GameView*) newGameView additionalView:(UIView*)otherView completionBlock:(void (^)(void))completionBlock
 {
-    [self.view insertSubview:newGameView atIndex:1]; // put at buttom
-    //[self.view addSubview:newGameView]; // put at the front
+    //[self.view insertSubview:newGameView atIndex:0]; // put above the old gameview. For some unknown reason I cannot simply put it on the top, or its subview (the label) won't be displayed. s
+    [self.view insertSubview:newGameView aboveSubview:gameView];
     
     CABasicAnimation *animation1 = [CABasicAnimation animation];
     animation1.keyPath = @"position.x";
@@ -480,7 +497,6 @@
     [animaiton setBeginTime:CACurrentMediaTime()];
     [CATransaction begin];
     [CATransaction setCompletionBlock:^(void){
-//        v.transform = transform;
         completionBlock();
     }];
     [v.layer addAnimation:animaiton forKey:@"animation"];
@@ -506,7 +522,6 @@
 
 - (float) getGameViewHeight
 {
-//    return [self getScreenHeight] - STATUS_VIEW_HEIGHT;
     return gameView.frame.size.height;
 }
 
