@@ -555,7 +555,7 @@
         
         [statusView.scoreView removeFromSuperview];
         
-        UILabel* scoreV = [[UILabel alloc] initWithFrame:CGRectMake(200, 200, 500, 200)];
+        UILabel* scoreV = [[UILabel alloc] initWithFrame:CGRectMake(200, 200, 700, 200)];
         scoreV.textColor = [UIColor whiteColor];
         scoreV.text = [NSString stringWithFormat:@"Our Score: %ld | Their Score: %ld", (long)myScore, (long)theirScore];
         scoreV.font = [scoreV.font fontWithSize:40.0];
