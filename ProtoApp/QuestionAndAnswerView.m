@@ -41,6 +41,10 @@
     
     colorPicker = [CALayer layer];
     colorPicker.frame = CGRectMake(sectionDividerXPos, [GlobalGetters getGameViewHeight]/3.0/2.0, [GlobalGetters getGameViewHeight]/4*3/1.5, [GlobalGetters getGameViewHeight]/1.5);
+    
+    //colorPicker.backgroundColor = [UIColor yellowColor].CGColor;
+    //self.backgroundColor = [UIColor lightGrayColor];
+    
     [self.layer addSublayer:colorPicker];
     
     return qaav;
@@ -92,6 +96,11 @@
     quesLayer.backgroundColor = [UIColor colorWithHue: question * (1.0/12.0) saturation:1 brightness:1 alpha:1].CGColor;
     [self.layer addSublayer:quesLayer];
     [CATransaction commit];
+    
+//    DotLayer* dll = [DotLayer layer];
+//    [dll customInit:3];
+//    [self.layer addSublayer:dll];
+//    [dll setNeedsDisplay];
 }
 
 - (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
@@ -133,15 +142,15 @@
  */
 - (void) selectDotAnimation
 {
-    if ([dotSelected getDotRaidus] < 600) {
-        [dotSelected setDotRadius:[dotSelected getDotRaidus]+20];
-        CGPoint position = dotSelected.position;
-        dotSelected.frame = CGRectMake(0,0,dotSelected.frame.size.width + 40, dotSelected.frame.size.height + 40);
-        dotSelected.position = position;
-        [dotSelected setNeedsDisplay];
-    } else {
-        [displayLink invalidate];
-        
+//    if ([dotSelected getDotRaidus] < 600) {
+//        [dotSelected setDotRadius:[dotSelected getDotRaidus]+20];
+//        CGPoint position = dotSelected.position;
+//        dotSelected.frame = CGRectMake(0,0,dotSelected.frame.size.width + 40, dotSelected.frame.size.height + 40);
+//        dotSelected.position = position;
+//        [dotSelected setNeedsDisplay];
+//    } else {
+//        [displayLink invalidate];
+    
         // stuff to do after the animaiton
         
         // init buttons
@@ -158,7 +167,7 @@
         cancelButton.frame = CGRectMake(sectionDividerXPos + 40, [GlobalGetters getGameViewHeight]/2 - 10, 70, 50);
         [cancelButton addTarget:self action:@selector(cancelButtonDown:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:cancelButton];
-    }
+//    }
 }
 
 /*
@@ -166,26 +175,26 @@
  */
 - (void) unselectDotAnimation
 {
-    if ([dotSelected getDotRaidus] > 50/1.5 - 5 + 1) {
-        float newDotRadius;
-        float newFrameSideLength;
-        if ([dotSelected getDotRaidus] > 50/1.5 - 5 + 41) {
-            newDotRadius = [dotSelected getDotRaidus]-40;
-            newFrameSideLength = dotSelected.frame.size.width - 80;
-        } else {
-            newDotRadius = 50/1.5 - 5;
-            newFrameSideLength = [GlobalGetters getGameViewHeight]/4/1.5;
-        }
-        
-        [dotSelected setDotRadius:newDotRadius];
-        CGPoint position = dotSelected.position;
-        dotSelected.frame = CGRectMake(0,0,newFrameSideLength, newFrameSideLength);
-        dotSelected.position = position;
-        [dotSelected setNeedsDisplay];
-    } else {
-        [displayLink invalidate];
-        // stuff to do after the animaiton
-    }
+//    if ([dotSelected getDotRaidus] > 50/1.5 - 5 + 1) {
+//        float newDotRadius;
+//        float newFrameSideLength;
+//        if ([dotSelected getDotRaidus] > 50/1.5 - 5 + 41) {
+//            newDotRadius = [dotSelected getDotRaidus]-40;
+//            newFrameSideLength = dotSelected.frame.size.width - 80;
+//        } else {
+//            newDotRadius = 50/1.5 - 5;
+//            newFrameSideLength = [GlobalGetters getGameViewHeight]/4/1.5;
+//        }
+//        
+//        [dotSelected setDotRadius:newDotRadius];
+//        CGPoint position = dotSelected.position;
+//        dotSelected.frame = CGRectMake(0,0,newFrameSideLength, newFrameSideLength);
+//        dotSelected.position = position;
+//        [dotSelected setNeedsDisplay];
+//    } else {
+//        [displayLink invalidate];
+//        // stuff to do after the animaiton
+//    }
 }
 
 - (void) confirmAnimation

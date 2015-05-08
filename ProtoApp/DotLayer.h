@@ -12,7 +12,7 @@
 @interface DotLayer : CALayer
 
 - (void) customInit:(Colors)c;
-- (void)setDotRadius:(float)r;
-- (float)getDotRaidus;
+//- (void)setDotRadius:(float)r;
+//- (float)getDotRaidus;
 
 @end

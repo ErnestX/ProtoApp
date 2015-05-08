@@ -40,6 +40,8 @@
     Colors answerProposed;
     
     NSInteger maxScorePossible; // used as the time the player have
+    NSInteger myScore;
+    NSInteger theirScore;
 }
 
 - (void)viewDidLoad {
@@ -60,6 +62,8 @@
     assignedTeam = false;
     turn = 0;
     maxScorePossible = 10;
+    myScore = 0;
+    theirScore = 0;
 }
 
 #pragma mark - Actions
@@ -162,7 +166,9 @@
 
 - (void) increaseMyScoreBy:(NSInteger)ms TheirScoreBy:(NSInteger)ts
 {
-    //TODO: increase scores
+    // increase scores
+    myScore += ms;
+    theirScore += ts;
     
     [self showScores];
 }
@@ -382,6 +388,7 @@
 - (void) transitFromWaitForQuestionToAnswerQuestionLayout:(Colors)q
 {
     questionPickedByCaptain = q;
+    answerProposed = 100; //make sure it is wrong if the player made no choice
     
     QuestionAndAnswerView* qaav = [[QuestionAndAnswerView alloc]customInit:q:self];
     [gameView addSubview: qaav];
@@ -417,7 +424,6 @@
 }
 
 #pragma mark - Transition Helpers
-
 
 /*
  Do not remove the old view or reassign gameView. Do those in the completion block
