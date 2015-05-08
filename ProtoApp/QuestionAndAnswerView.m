@@ -129,14 +129,14 @@
     
     // init buttons
     confirmButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [confirmButton setTitle: @"Confirm" forState:UIControlStateNormal];
+    [confirmButton setTitle: @"CONFIRM" forState:UIControlStateNormal];
     [confirmButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     confirmButton.frame = CGRectMake(sectionDividerXPos + 130, [GlobalGetters getGameViewHeight]/2 - 50, 70, 50);
     [confirmButton addTarget:self action:@selector(confirmButtonDown:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:confirmButton];
     
     cancelButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [cancelButton setTitle: @"Cancel" forState:UIControlStateNormal];
+    [cancelButton setTitle: @"CANCEL" forState:UIControlStateNormal];
     [cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     cancelButton.frame = CGRectMake(sectionDividerXPos + 130, [GlobalGetters getGameViewHeight]/2 - 10, 70, 50);
     [cancelButton addTarget:self action:@selector(cancelButtonDown:) forControlEvents:UIControlEventTouchUpInside];
