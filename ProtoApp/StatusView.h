@@ -10,6 +10,7 @@
 
 @interface StatusView : UIView
 @property UIView* teamView;
+@property UIView* turnView;
 @property UIView* roleView;
 @property UIView* scoreView;
 

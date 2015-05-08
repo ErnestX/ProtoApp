@@ -78,7 +78,7 @@
 {
     if (assignedTeam) {
         turn += 1;
-        [self transitFromTeamAssignmentToNewTurnLayout];
+        [self transitToNewTurnLayout];
         return true;
     } else {
         return false;
@@ -111,7 +111,6 @@
       success:^(AFHTTPRequestOperation *operation, id responseObject) {
           NSLog(@"captain submitted color successful");
           [weakSelf waitForScore];
-
       }
       failure:^(AFHTTPRequestOperation *operation, NSError *error) {
           NSLog(@"error code: %ld", (long)operation.response.statusCode);
@@ -179,8 +178,6 @@
               
               NSLog(@"score = %ld", (long)score);
               return;
-              
-              
           } else {
               [weakSelf waitForScore];
           }
@@ -212,8 +209,6 @@
                   [weakSelf increaseMyScoreBy:avgScore TheirScoreBy:0];
               else [weakSelf increaseMyScoreBy:0 TheirScoreBy:avgScore];
               return;
-
-              
           } else {
               [weakSelf waitForScore];
           }
@@ -293,6 +288,8 @@
     TeamView* tv = [[TeamView alloc]customInitWithTeam:isInTeamOne];
     tv.transform = CGAffineTransformMake(1, 0, 0, 1, [self getScreenWidth]/2 - 160, [self getGameViewHeight]/2 - 150);
     [statusView addSubview:tv];
+    statusView.teamView = tv;
+    
     [weakSelf setNewGameViewPushAnimation:newGv additionalView:tv completionBlock:^(void) {
         [gameView removeFromSuperview];
         gameView = newGv;
@@ -302,31 +299,39 @@
 
 #pragma mark NewTurn
 
-- (void) transitFromTeamAssignmentToNewTurnLayout
+- (void) transitToNewTurnLayout
 {
     [b1 removeFromSuperview];
     b1 = [UIButton buttonWithType:UIButtonTypeSystem];
     [b1 setTitle: @"Captain" forState:UIControlStateNormal];
     b1.frame = CGRectMake([self getScreenWidth] - 170, [self getGameViewHeight] - 40, 150, 50);
     [b1 addTarget:self action:@selector(assignAsCaptain) forControlEvents:UIControlEventTouchUpInside];
-    
+    [b2 removeFromSuperview];
     b2 = [UIButton buttonWithType:UIButtonTypeSystem];
     [b2 setTitle: @"Minion" forState:UIControlStateNormal];
     b2.frame = CGRectMake([self getScreenWidth] - 60, [self getGameViewHeight] - 40, 70, 50);
     [b2 addTarget:self action:@selector(assignAsMinion) forControlEvents:UIControlEventTouchUpInside];
-    
     [gameView addSubview:b1];
     [gameView addSubview:b2];
     
+    
+    
+    [statusView.turnView removeFromSuperview];
+    [statusView.roleView removeFromSuperview];
+    questionPickedByCaptain = 100;
+    answerProposed = 100;
+    
      __weak typeof(self) weakSelf = self;
-    UILabel* l = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 500, 200)];
-    l.transform = CGAffineTransformMake(1, 0, 0, 1, [self getScreenWidth]/2 - 160, [self getGameViewHeight]/2 - 150);
-    l.font = [l.font fontWithSize:100.0];
-    l.text = [NSString stringWithFormat:@"Turn %ld",(long)turn];
-    l.textColor = [UIColor whiteColor];
-    [statusView addSubview:l];
-    [self setNewGameViewPushAnimation:NULL additionalView:l completionBlock:^(void){
-        [weakSelf transformViewAnimated:l endTransform:CGAffineTransformMake(0.3, 0, 0, 0.3, -20, -50) completionBlock:^(void){
+    UILabel* turnV = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 500, 200)];
+    turnV.transform = CGAffineTransformMake(1, 0, 0, 1, [self getScreenWidth]/2 - 160, [self getGameViewHeight]/2 - 150);
+    turnV.font = [turnV.font fontWithSize:100.0];
+    turnV.text = [NSString stringWithFormat:@"Turn %ld",(long)turn];
+    turnV.textColor = [UIColor whiteColor];
+    [statusView addSubview:turnV];
+    statusView.turnView = turnV;
+    
+    [self setNewGameViewPushAnimation:NULL additionalView:turnV completionBlock:^(void){
+        [weakSelf transformViewAnimated:turnV endTransform:CGAffineTransformMake(0.3, 0, 0, 0.3, -20, -50) completionBlock:^(void){
             // after the animation
             if (![weakSelf isInOffendingTeam]) {
                 // not our turn, go wait for question
@@ -343,26 +348,28 @@
 {
     __weak typeof(self) weakSelf = self;
     if ([self isInOffendingTeam]) {
-        UILabel* l = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 500, 200)];
-        l.transform = CGAffineTransformMake(1, 0, 0, 1, [self getScreenWidth]/2 - 160, [self getGameViewHeight]/2 - 150);
-        l.font = [l.font fontWithSize:100.0];
-        l.textColor = [UIColor whiteColor];
+        UILabel* roleV = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 500, 200)];
+        roleV.transform = CGAffineTransformMake(1, 0, 0, 1, [self getScreenWidth]/2 - 160, [self getGameViewHeight]/2 - 150);
+        roleV.font = [roleV.font fontWithSize:100.0];
+        roleV.textColor = [UIColor whiteColor];
         
         if (isCaptain) {
-            l.text = [NSString stringWithFormat:@"Captain"];
-            [statusView addSubview:l];
+            roleV.text = [NSString stringWithFormat:@"Captain"];
+            [statusView addSubview:roleV];
+            statusView.roleView = roleV;
             
-            [self setNewGameViewPushAnimation:NULL additionalView:l completionBlock:^(void){
-                [weakSelf transformViewAnimated:l endTransform:CGAffineTransformMake(0.3, 0, 0, 0.3, 110, -50) completionBlock:^(void) {
+            [self setNewGameViewPushAnimation:NULL additionalView:roleV completionBlock:^(void){
+                [weakSelf transformViewAnimated:roleV endTransform:CGAffineTransformMake(0.3, 0, 0, 0.3, 110, -50) completionBlock:^(void) {
                     [weakSelf transitFromCaptainAssignToCaptainPickColorLayout]; // go straight ahead
                 }];
             }];
         } else {
-            l.text = [NSString stringWithFormat:@"Minion"];
-            [statusView addSubview:l];
+            roleV.text = [NSString stringWithFormat:@"Minion"];
+            [statusView addSubview:roleV];
+            statusView.roleView = roleV;
             
-            [self setNewGameViewPushAnimation:NULL additionalView:l completionBlock:^(void){
-                [weakSelf transformViewAnimated:l endTransform:CGAffineTransformMake(0.3, 0, 0, 0.3, 110, -50) completionBlock:^(void) {
+            [self setNewGameViewPushAnimation:NULL additionalView:roleV completionBlock:^(void){
+                [weakSelf transformViewAnimated:roleV endTransform:CGAffineTransformMake(0.3, 0, 0, 0.3, 110, -50) completionBlock:^(void) {
                     [weakSelf transitFromCaptainAssignToWaitForCaptainLayout]; // go ahead
                 }];
             }];
@@ -394,6 +401,16 @@
  */
 - (BOOL) transitFromCaptainAssignToWaitForCaptainLayout
 {
+    UILabel* l = [[UILabel alloc]initWithFrame:CGRectMake(430, 240, 300, 100)];
+    l.text = @"waiting for the captain";
+    l.textColor = [UIColor whiteColor];
+    [gameView addSubview:l];
+    
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    spinner.center  = CGPointMake([GlobalGetters getScreenWidth]/2, [GlobalGetters getGameViewHeight]/2);
+    [gameView addSubview:spinner];
+    [spinner startAnimating];
+    
     NSLog(@"wait for the captain");
     [self waitForScore];
     return true;
@@ -475,14 +492,18 @@
 {
     NSLog(@"see sccore");
     
+    [timerView removeFromSuperview];
+    [statusView.scoreView removeFromSuperview];
+    
     GameView* newGv = [[GameView alloc]customInit];
     
     [b1 removeFromSuperview];
+    
     [b2 removeFromSuperview];
     b2 = [UIButton buttonWithType:UIButtonTypeSystem];
     [b2 setTitle: @"show" forState:UIControlStateNormal];
     b2.frame = CGRectMake([self getScreenWidth] - 60, [self getGameViewHeight] - 40, 70, 50);
-    [b2 addTarget:self action:@selector(showScores) forControlEvents:UIControlEventTouchUpInside];
+    [b2 addTarget:self action:@selector(increaseMyScoreBy:TheirScoreBy:) forControlEvents:UIControlEventTouchUpInside];
     
     [newGv addSubview:b2];
     
@@ -491,10 +512,10 @@
     l.text = @"waiting for the scores";
     l.textColor = [UIColor whiteColor];
     [newGv addSubview:l];
+    
     UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     spinner.center  = CGPointMake([GlobalGetters getScreenWidth]/2, [GlobalGetters getGameViewHeight]/2);
     [newGv addSubview:spinner];
-    
     [spinner startAnimating];
     
      __weak typeof(self) weakSelf = self;
@@ -513,19 +534,29 @@
         for (UIView* v in gameView.subviews) {
             [v removeFromSuperview];
         }
-        UILabel* l = [[UILabel alloc] initWithFrame:CGRectMake(200, 200, 500, 200)];
-        l.textColor = [UIColor whiteColor];
-        l.text = [NSString stringWithFormat:@"Our Score: %ld | Their Score: %ld", (long)myScore, (long)theirScore];
-        l.font = [l.font fontWithSize:40.0];
-        l.alpha = 0;
-        [statusView addSubview:l];
+        
+        b1 = [UIButton buttonWithType:UIButtonTypeSystem];
+        [b1 setTitle: @"StartsNewRound" forState:UIControlStateNormal];
+        b1.frame = CGRectMake([self getScreenWidth] - 150, [self getGameViewHeight] - 40, 150, 50);
+        [b1 addTarget:self action:@selector(startNewRound) forControlEvents:UIControlEventTouchUpInside];
+        [gameView addSubview:b1];
+        
+        [statusView.scoreView removeFromSuperview];
+        
+        UILabel* scoreV = [[UILabel alloc] initWithFrame:CGRectMake(200, 200, 500, 200)];
+        scoreV.textColor = [UIColor whiteColor];
+        scoreV.text = [NSString stringWithFormat:@"Our Score: %ld | Their Score: %ld", (long)myScore, (long)theirScore];
+        scoreV.font = [scoreV.font fontWithSize:40.0];
+        scoreV.alpha = 0;
+        [statusView addSubview:scoreV];
+        statusView.scoreView = scoreV;
         
         [CATransaction begin];
         [CATransaction setCompletionBlock:^(void){
-            [self transformViewAnimated:l endTransform:CGAffineTransformMake(0.7, 0, 0, 0.7, 100, -250) completionBlock:^(void){}];
+            [self transformViewAnimated:scoreV endTransform:CGAffineTransformMake(0.7, 0, 0, 0.7, 150, -250) completionBlock:^(void){}];
         }];
         [UIView beginAnimations:@"fade in" context:nil];
-        l.alpha = 1;
+        scoreV.alpha = 1;
         [UIView commitAnimations];
         [CATransaction commit];
         
@@ -546,7 +577,7 @@
 
 - (void) transitFromSeeScoreToNewTurnLayout
 {
-    
+    [self transitToNewTurnLayout];
 }
 
 #pragma mark - Transition Helpers
