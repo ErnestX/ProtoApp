@@ -162,7 +162,7 @@
     NSString *path = [NSString stringWithFormat:@"%@%@", HOST_NAME, @"ScoreServlet"];
     NSDictionary *params = @{@"is_questioning" : [NSNumber numberWithBool:NO],
                              @"is_waiting" : [NSNumber numberWithBool:NO],
-                             @"my_score" : [NSNumber numberWithInt:score]};
+                             @"my_score" : [NSNumber numberWithInteger:score]};
 
     AFHTTPRequestOperationManager *mgr = [AFHTTPRequestOperationManager manager];
     __weak typeof(self) weakSelf = self;
