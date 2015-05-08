@@ -11,6 +11,7 @@
 
 @implementation StatusView
 @synthesize teamView;
+@synthesize turnView;
 @synthesize roleView;
 @synthesize scoreView;
 
