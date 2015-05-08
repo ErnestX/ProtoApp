@@ -472,6 +472,17 @@
     NSLog(@"see sccore");
     
     GameView* newGv = [[GameView alloc]customInit];
+    
+    [b1 removeFromSuperview];
+    [b2 removeFromSuperview];
+    b2 = [UIButton buttonWithType:UIButtonTypeSystem];
+    [b2 setTitle: @"show" forState:UIControlStateNormal];
+    b2.frame = CGRectMake([self getScreenWidth] - 60, [self getGameViewHeight] - 40, 70, 50);
+    [b2 addTarget:self action:@selector(showScores) forControlEvents:UIControlEventTouchUpInside];
+    
+    [newGv addSubview:b2];
+    
+    
     UILabel* l = [[UILabel alloc]initWithFrame:CGRectMake(430, 240, 300, 100)];
     l.text = @"waiting for the scores";
     l.textColor = [UIColor whiteColor];
