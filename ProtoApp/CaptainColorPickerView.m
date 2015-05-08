@@ -82,9 +82,6 @@
             }
         }
     }
-//    } else {
-//        [self unselectColor];
-//    }
 }
 
 - (void) colorSelected:(CALayer*)card

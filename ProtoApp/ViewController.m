@@ -467,21 +467,23 @@
     
     [self.view bringSubviewToFront:statusView];
     
+    // store and set transform
+    CGAffineTransform transf = v.transform;
+    v.transform = transform;
+    
     CABasicAnimation *animaiton = [CABasicAnimation animation];
     animaiton.keyPath = @"transform";
-    animaiton.fromValue = [NSValue valueWithCATransform3D:v.layer.transform];
+    animaiton.fromValue = [NSValue valueWithCATransform3D:CATransform3DMakeAffineTransform(transf)];
     animaiton.toValue = [NSValue valueWithCATransform3D:CATransform3DMakeAffineTransform(transform)];
     [animaiton setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-    [animaiton setBeginTime:CACurrentMediaTime()+1.0];
+    [animaiton setBeginTime:CACurrentMediaTime()];
     [CATransaction begin];
     [CATransaction setCompletionBlock:^(void){
-        v.transform = transform;
+//        v.transform = transform;
         completionBlock();
     }];
     [v.layer addAnimation:animaiton forKey:@"animation"];
     [CATransaction commit];
-    
-    //tv.layer.transform = CATransform3DMakeAffineTransform(transform); //this will finish before the animation even begin due to the delay
 }
 
 #pragma mark - Getters
