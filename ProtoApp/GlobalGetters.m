@@ -33,7 +33,6 @@
 
 + (UIColor*)uiColorFromColors:(Colors)c
 {
-//    return [UIColor colorWithHue:c * (1.0/12.0) saturation:1 brightness:1 alpha:1].CGColor;
     switch (c) {
         case 0:
             return [UIColor colorWithHue:0.0/360.0 saturation:1 brightness:1 alpha:1];

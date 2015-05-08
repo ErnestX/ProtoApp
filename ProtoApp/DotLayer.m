@@ -8,44 +8,30 @@
 
 #import <UIKit/UIKit.h>
 #import "DotLayer.h"
-#import "GlobalGetters.h";
+#import "GlobalGetters.h"
+#import "Dot.h"
 
 @implementation DotLayer
 {
     Colors colorEnum;
     CGColorRef color;
     float sideLength;
-    float dotRadius;
+    //float dotRadius;
 }
 
 - (void) customInit:(Colors)c
 {
     colorEnum = c;
-    sideLength = [GlobalGetters getGameViewHeight]/4/1.5;
-    dotRadius = 50/1.5 - 5;
+    sideLength = 1100;
     self.frame = CGRectMake(0, 0, sideLength, sideLength);
-}
-
-- (void)drawInContext:(CGContextRef)ctx
-{
-    UIGraphicsPushContext(ctx);
     
-    //color = [UIColor colorWithHue: colorEnum * (1.0/12.0) saturation:1 brightness:1 alpha:1].CGColor;
-    color = [GlobalGetters uiColorFromColors:colorEnum].CGColor;
-    CGContextSetFillColorWithColor(ctx, color);
-    CGContextFillEllipseInRect(ctx, CGRectMake((self.frame.size.width - dotRadius*2.0)/2.0, (self.frame.size.width - dotRadius*2.0)/2.0, dotRadius*2.0, dotRadius*2.0));
+    Dot* d = [Dot layer];
+    d.frame = self.frame;
+    d.uiColor = [GlobalGetters uiColorFromColors:c];
+    [self addSublayer:d];
+    [d setNeedsDisplay];
     
-    UIGraphicsPopContext();
-}
-
-- (float)getDotRaidus
-{
-    return dotRadius;
-}
-
-- (void)setDotRadius:(float)r
-{
-    dotRadius = r;
+    self.transform = CATransform3DMakeScale(0.05, 0.05, 0.05);
 }
 
 @end

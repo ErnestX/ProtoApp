@@ -40,6 +40,8 @@
     Colors answerProposed;
     
     NSInteger maxScorePossible; // used as the time the player have
+    NSInteger myScore;
+    NSInteger theirScore;
 }
 
 - (void)viewDidLoad {
@@ -60,6 +62,8 @@
     assignedTeam = false;
     turn = 0;
     maxScorePossible = 10;
+    myScore = 0;
+    theirScore = 0;
 }
 
 #pragma mark - Actions
@@ -187,7 +191,9 @@
 
 - (void) increaseMyScoreBy:(NSInteger)ms TheirScoreBy:(NSInteger)ts
 {
-    //TODO: increase scores
+    // increase scores
+    myScore += ms;
+    theirScore += ts;
     
     [self showScores];
 }
@@ -408,6 +414,7 @@
 - (void) transitFromWaitForQuestionToAnswerQuestionLayout:(Colors)q
 {
     questionPickedByCaptain = q;
+    answerProposed = 100; //make sure it is wrong if the player made no choice
     
     QuestionAndAnswerView* qaav = [[QuestionAndAnswerView alloc]customInit:q:self];
     [gameView addSubview: qaav];
@@ -444,13 +451,13 @@
 
 #pragma mark - Transition Helpers
 
-
 /*
  Do not remove the old view or reassign gameView. Do those in the completion block
  */
 - (void) setNewGameViewPushAnimation:(GameView*) newGameView additionalView:(UIView*)otherView completionBlock:(void (^)(void))completionBlock
 {
-    [self.view insertSubview:newGameView atIndex:0]; // put at buttom
+    [self.view insertSubview:newGameView atIndex:1]; // put at buttom
+    //[self.view addSubview:newGameView]; // put at the front
     
     CABasicAnimation *animation1 = [CABasicAnimation animation];
     animation1.keyPath = @"position.x";
@@ -485,21 +492,23 @@
     
     [self.view bringSubviewToFront:statusView];
     
+    // store and set transform
+    CGAffineTransform transf = v.transform;
+    v.transform = transform;
+    
     CABasicAnimation *animaiton = [CABasicAnimation animation];
     animaiton.keyPath = @"transform";
-    animaiton.fromValue = [NSValue valueWithCATransform3D:v.layer.transform];
+    animaiton.fromValue = [NSValue valueWithCATransform3D:CATransform3DMakeAffineTransform(transf)];
     animaiton.toValue = [NSValue valueWithCATransform3D:CATransform3DMakeAffineTransform(transform)];
     [animaiton setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-    [animaiton setBeginTime:CACurrentMediaTime()+1.0];
+    [animaiton setBeginTime:CACurrentMediaTime()];
     [CATransaction begin];
     [CATransaction setCompletionBlock:^(void){
-        v.transform = transform;
+//        v.transform = transform;
         completionBlock();
     }];
     [v.layer addAnimation:animaiton forKey:@"animation"];
     [CATransaction commit];
-    
-    //tv.layer.transform = CATransform3DMakeAffineTransform(transform); //this will finish before the animation even begin due to the delay
 }
 
 #pragma mark - Getters

@@ -14,7 +14,7 @@
     float colorCardHeight;
     float colorCardWidth;
     CALayer* colorRing;
-    BOOL colorSelected;
+    BOOL isColorSelected;
     
     CALayer* selectedCard;
     NSInteger selectedCardIndex;
@@ -22,6 +22,7 @@
     float selectedCardZPositionArchive;
     
     UIButton* confirmButton;
+    UIButton* cancelButton;
     
     ViewController* controller;
 }
@@ -66,7 +67,7 @@
     }
     [CATransaction commit];
     
-    colorSelected = false;
+    isColorSelected = false;
 }
 
 - (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
@@ -74,14 +75,12 @@
     [super touchesBegan:touches withEvent:event];
     CGPoint touchPoint = [(UITouch*)[touches anyObject] locationInView:self];
     
-    if (!colorSelected) {
+    if (!isColorSelected) {
         for (CALayer* c in colorRing.sublayers) {
             if ([c.modelLayer containsPoint:[c convertPoint:touchPoint fromLayer:c.superlayer]]) {
                 [self colorSelected:c];
             }
         }
-    } else {
-        [self unselectColor];
     }
 }
 
@@ -93,7 +92,7 @@
     
     selectedCard = card;
     card.zPosition = 100;
-    CATransform3D tempTrans = CATransform3DMakeScale(8.1, 3, 1);
+    CATransform3D tempTrans = CATransform3DMakeScale(8.1, 4, 1);
     card.transform = CATransform3DTranslate(tempTrans, 0, 66.5, 0);
     
     confirmButton = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -103,15 +102,23 @@
     [confirmButton addTarget:self action:@selector(confirmButtonDown:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:confirmButton];
     
+    cancelButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [cancelButton setTitle: @"CANCEL" forState:UIControlStateNormal];
+    [cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    cancelButton.frame = CGRectMake([GlobalGetters getScreenWidth]/2 - 35, [GlobalGetters getGameViewHeight]/2, 70, 50);
+    [cancelButton addTarget:self action:@selector(unselectColor) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:cancelButton];
+    
     NSLog(@"color selected %ld", (long)selectedCardIndex);
     
-    colorSelected = true;
+    isColorSelected = true;
 }
 
 - (IBAction)confirmButtonDown:(id)sender
 {
     [self sendColor];
     [confirmButton removeFromSuperview];
+    [cancelButton removeFromSuperview];
 }
 
 - (void)unselectColor
@@ -119,7 +126,8 @@
     selectedCard.transform = selectedCardTransformArchive;
     selectedCard.zPosition = selectedCardZPositionArchive;
     [confirmButton removeFromSuperview];
-    colorSelected = false;
+    [cancelButton removeFromSuperview];
+    isColorSelected = false;
 }
 
 - (void)sendColor
@@ -130,7 +138,7 @@
     
     [CATransaction begin];
     [CATransaction setAnimationDuration:1];
-    selectedCard.position = CGPointMake(selectedCard.position.x, selectedCard.position.y - 800);
+    selectedCard.position = CGPointMake(selectedCard.position.x, selectedCard.position.y - 900);
     [CATransaction commit];
     Colors colorPicked = [self getColorByIndex:selectedCardIndex];
     [controller sendColorPicked:colorPicked];

@@ -11,7 +11,7 @@
 #import "DotLayer.h"
 #import "ColorsEnumType.h"
 
-@implementation QuestionAndAnswerView{
+@implementation QuestionAndAnswerView {
     Colors question;
     ViewController* controller;
     CALayer* colorPicker;
@@ -22,6 +22,7 @@
     float dotAnimationSideLength;
     DotLayer* dotSelected;
     float selectedLayerZPosArchive;
+    CATransform3D selectedLayerTransformArchive;
     Colors selectedLayerColor;
     UIButton* confirmButton;
     UIButton* cancelButton;
@@ -41,6 +42,7 @@
     
     colorPicker = [CALayer layer];
     colorPicker.frame = CGRectMake(sectionDividerXPos, [GlobalGetters getGameViewHeight]/3.0/2.0, [GlobalGetters getGameViewHeight]/4*3/1.5, [GlobalGetters getGameViewHeight]/1.5);
+    
     [self.layer addSublayer:colorPicker];
     
     return qaav;
@@ -118,74 +120,29 @@
     dotSelected = dot;
     selectedLayerColor = (Colors)[colorPicker.sublayers indexOfObject:dotSelected];
     selectedLayerZPosArchive = dotSelected.zPosition;
+    selectedLayerTransformArchive = dotSelected.transform;
     NSLog(@"color selected");
     
     // run animation
     dotSelected.zPosition = 100;
-    displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(selectDotAnimation)];
-    [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+    dotSelected.transform = CATransform3DMakeScale(1, 1, 1);
+    
+    // init buttons
+    confirmButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [confirmButton setTitle: @"CONFIRM" forState:UIControlStateNormal];
+    [confirmButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    confirmButton.frame = CGRectMake(sectionDividerXPos + 130, [GlobalGetters getGameViewHeight]/2 - 50, 70, 50);
+    [confirmButton addTarget:self action:@selector(confirmButtonDown:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:confirmButton];
+    
+    cancelButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [cancelButton setTitle: @"CANCEL" forState:UIControlStateNormal];
+    [cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    cancelButton.frame = CGRectMake(sectionDividerXPos + 130, [GlobalGetters getGameViewHeight]/2 - 10, 70, 50);
+    [cancelButton addTarget:self action:@selector(cancelButtonDown:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:cancelButton];
     
     isColorSelected = true;
-}
-
-/*
- to be called by CADisplayLink
- */
-- (void) selectDotAnimation
-{
-    if ([dotSelected getDotRaidus] < 600) {
-        [dotSelected setDotRadius:[dotSelected getDotRaidus]+20];
-        CGPoint position = dotSelected.position;
-        dotSelected.frame = CGRectMake(0,0,dotSelected.frame.size.width + 40, dotSelected.frame.size.height + 40);
-        dotSelected.position = position;
-        [dotSelected setNeedsDisplay];
-    } else {
-        [displayLink invalidate];
-        
-        // stuff to do after the animaiton
-        
-        // init buttons
-        confirmButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        [confirmButton setTitle: @"Confirm" forState:UIControlStateNormal];
-        [confirmButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        confirmButton.frame = CGRectMake(sectionDividerXPos + 40, [GlobalGetters getGameViewHeight]/2 - 50, 70, 50);
-        [confirmButton addTarget:self action:@selector(confirmButtonDown:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:confirmButton];
-        
-        cancelButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        [cancelButton setTitle: @"Cancel" forState:UIControlStateNormal];
-        [cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        cancelButton.frame = CGRectMake(sectionDividerXPos + 40, [GlobalGetters getGameViewHeight]/2 - 10, 70, 50);
-        [cancelButton addTarget:self action:@selector(cancelButtonDown:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:cancelButton];
-    }
-}
-
-/*
- to be called by CADisplayLink
- */
-- (void) unselectDotAnimation
-{
-    if ([dotSelected getDotRaidus] > 50/1.5 - 5 + 1) {
-        float newDotRadius;
-        float newFrameSideLength;
-        if ([dotSelected getDotRaidus] > 50/1.5 - 5 + 41) {
-            newDotRadius = [dotSelected getDotRaidus]-40;
-            newFrameSideLength = dotSelected.frame.size.width - 80;
-        } else {
-            newDotRadius = 50/1.5 - 5;
-            newFrameSideLength = [GlobalGetters getGameViewHeight]/4/1.5;
-        }
-        
-        [dotSelected setDotRadius:newDotRadius];
-        CGPoint position = dotSelected.position;
-        dotSelected.frame = CGRectMake(0,0,newFrameSideLength, newFrameSideLength);
-        dotSelected.position = position;
-        [dotSelected setNeedsDisplay];
-    } else {
-        [displayLink invalidate];
-        // stuff to do after the animaiton
-    }
 }
 
 - (void) confirmAnimation
@@ -202,8 +159,8 @@
 
 - (IBAction)confirmButtonDown:(id)sender
 {
-    NSLog(@"confirmed");
     [controller answerSentForQuestion:selectedLayerColor];
+    
     [CATransaction begin];
     [CATransaction setCompletionBlock:^(void){
         // make sure the animation runs only after the dot layer has been removed
@@ -219,17 +176,15 @@
     [self.layer addSublayer:card];
     
     [dotSelected removeFromSuperlayer];
+    
     [CATransaction commit];
 }
 
 - (IBAction)cancelButtonDown:(id)sender
 {
-    NSLog(@"canceled");
     // run animation
-    [CATransaction begin];
-    displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(unselectDotAnimation)];
-    [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
-    [CATransaction commit];
+    dotSelected.transform = selectedLayerTransformArchive;
+
     // restore zPos
     dotSelected.zPosition = selectedLayerZPosArchive;
     
