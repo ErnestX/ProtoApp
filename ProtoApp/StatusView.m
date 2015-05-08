@@ -10,6 +10,9 @@
 #import "GlobalGetters.h"
 
 @implementation StatusView
+@synthesize teamView;
+@synthesize roleView;
+@synthesize scoreView;
 
 - (id) initWithFrame:(CGRect)frame
 {

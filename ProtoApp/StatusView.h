@@ -9,6 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface StatusView : UIView
+@property UIView* teamView;
+@property UIView* roleView;
+@property UIView* scoreView;
 
 - (id) customInit;
 

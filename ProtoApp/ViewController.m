@@ -502,20 +502,37 @@
 
 - (void) showScores
 {
+    [self.view bringSubviewToFront:statusView];
     
+    [CATransaction begin];
+    [CATransaction setCompletionBlock:^(void){
+        for (UIView* v in gameView.subviews) {
+            [v removeFromSuperview];
+        }
+        UILabel* l = [[UILabel alloc] initWithFrame:CGRectMake(200, 200, 500, 200)];
+        l.textColor = [UIColor whiteColor];
+        l.text = [NSString stringWithFormat:@"Our Score: %ld | Their Score: %ld", (long)myScore, (long)theirScore];
+        l.font = [l.font fontWithSize:40.0];
+        l.alpha = 0;
+        [statusView addSubview:l];
+        
+        [CATransaction begin];
+        [CATransaction setCompletionBlock:^(void){
+            [self transformViewAnimated:l endTransform:CGAffineTransformMake(0.7, 0, 0, 0.7, 100, -250) completionBlock:^(void){}];
+        }];
+        [UIView beginAnimations:@"fade in" context:nil];
+        l.alpha = 1;
+        [UIView commitAnimations];
+        [CATransaction commit];
+        
+    }];
+    
+    [UIView beginAnimations:@"fade out" context:nil];
     for (UIView* v in gameView.subviews) {
-        [v removeFromSuperview];
+        v.alpha = 0;
     }
-    
-    UILabel* l = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 50)];
-    l.textColor = [UIColor whiteColor];
-    l.text = [NSString stringWithFormat:@"Our Score: %ld | Their Score: %ld", (long)myScore, (long)theirScore];
-    l.alpha = 0;
-    [gameView addSubview:l];
-    
-    [UIView beginAnimations:@"animation" context:nil];
-    l.alpha = 1;
     [UIView commitAnimations];
+    [CATransaction commit];
 }
 
 - (void) transitFromSeeScoreToEndGameLayout
@@ -580,6 +597,7 @@
     animaiton.fromValue = [NSValue valueWithCATransform3D:CATransform3DMakeAffineTransform(transf)];
     animaiton.toValue = [NSValue valueWithCATransform3D:CATransform3DMakeAffineTransform(transform)];
     [animaiton setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+    [animaiton setDuration:1];
     [animaiton setBeginTime:CACurrentMediaTime()];
     [CATransaction begin];
     [CATransaction setCompletionBlock:^(void){
