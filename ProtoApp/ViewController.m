@@ -299,7 +299,7 @@
     __weak typeof(self) weakSelf = self;
     TeamView* tv = [[TeamView alloc]customInitWithTeam:isInTeamOne];
     
-    tv.transform = CGAffineTransformMake(1, 0, 0, 1, [self getScreenWidth]/2 - 160, [self getGameViewHeight]/2 - 150);
+    tv.transform = CGAffineTransformMake(1, 0, 0, 1, [self getScreenWidth]/2 - 260, [self getGameViewHeight]/2 - 150);
     [statusView addSubview:tv];
     statusView.teamView = tv;
     
@@ -362,7 +362,7 @@
     __weak typeof(self) weakSelf = self;
     if ([self isInOffendingTeam]) {
         UILabel* roleV = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 500, 200)];
-        roleV.transform = CGAffineTransformMake(1, 0, 0, 1, [self getScreenWidth]/2 - 160, [self getGameViewHeight]/2 - 150);
+        roleV.transform = CGAffineTransformMake(1, 0, 0, 1, [self getScreenWidth]/2 - 60, [self getGameViewHeight]/2 - 150);
         roleV.font = [roleV.font fontWithSize:100.0];
         roleV.textColor = [UIColor whiteColor];
         
@@ -633,8 +633,8 @@
     animation1.duration = 1.0;
     
     CABasicAnimation *animation2 = [CABasicAnimation animation];
-    animation2.keyPath = @"position.x";
-    animation2.fromValue = [NSNumber numberWithFloat:otherView.frame.origin.x + [self getScreenWidth] - 90];
+    animation2.keyPath = @"transform.translation.x";
+    animation2.fromValue = [NSNumber numberWithFloat:otherView.layer.transform.m41 + [self getScreenWidth]];
     animation2.byValue = [NSNumber numberWithFloat: (-1 *[self getScreenWidth])];
     [animation2 setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
     animation2.duration = 1.0;
@@ -660,12 +660,12 @@
     [self.view bringSubviewToFront:statusView];
     
     // store and set transform
-    CGAffineTransform transf = v.transform;
+    CGAffineTransform transfArchive = v.transform;
     v.transform = transform;
     
     CABasicAnimation *animaiton = [CABasicAnimation animation];
     animaiton.keyPath = @"transform";
-    animaiton.fromValue = [NSValue valueWithCATransform3D:CATransform3DMakeAffineTransform(transf)];
+    animaiton.fromValue = [NSValue valueWithCATransform3D:CATransform3DMakeAffineTransform(transfArchive)];
     animaiton.toValue = [NSValue valueWithCATransform3D:CATransform3DMakeAffineTransform(transform)];
     [animaiton setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
     [animaiton setDuration:1];
