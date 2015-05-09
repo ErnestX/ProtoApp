@@ -620,6 +620,7 @@
 
 /*
  Do not remove the old view or reassign gameView. Do those in the completion block
+ the gameViews are animated using position, while the extra view is animated by transform. 
  */
 - (void) setNewGameViewPushAnimation:(GameView*) newGameView additionalView:(UIView*)otherView completionBlock:(void (^)(void))completionBlock
 {
