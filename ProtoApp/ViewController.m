@@ -15,7 +15,7 @@
 #import "QuestionAndAnswerView.h"
 #import "TimerView.h"
 
-#define HOST_NAME @"http://128.189.239.107:8080/ProtoApp/"
+#define HOST_NAME @"http://128.189.237.129:8080/ProtoApp/"
 
 @interface ViewController ()
 
@@ -62,10 +62,10 @@
 {
     assignedTeam = false;
     turn = 0;
-    maxScorePossible = 20;
+    maxScorePossible = 30;
     myScore = 0;
     theirScore = 0;
-    numberOfRounds = 2;
+    numberOfRounds = 1;
 }
 
 #pragma mark - Actions
@@ -109,7 +109,8 @@
 
     NSString *path = [NSString stringWithFormat:@"%@%@", HOST_NAME, @"ChooseColorServlet"];
     NSDictionary *params = @{@"color_chosen" : [NSNumber numberWithInt:color],
-                             @"is_from_captain" : [NSNumber numberWithBool:YES]};
+                             @"is_from_captain" : [NSNumber numberWithBool:YES],
+                             @"curr_turn" : [NSNumber numberWithInt:turn]};
     __weak typeof(self) weakSelf = self;
 
     [mgr POST:path
@@ -347,9 +348,43 @@
             if (![weakSelf isInOffendingTeam]) {
                 // not our turn, go wait for question
                 [weakSelf transitFromNewTurnToWaitForQuestion];
+            } else {
+                if (turn != 1) [weakSelf assignCapViaServer];
             }
         }];
     }];
+}
+
+- (void) assignCapViaServer {
+    if (turn != 1) {
+        NSString *path = [NSString stringWithFormat:@"%@%@", HOST_NAME, @"ConnectServlet"];
+        AFHTTPRequestOperationManager *mgr = [AFHTTPRequestOperationManager manager];
+        NSString *uid = [[UIDevice currentDevice] identifierForVendor].UUIDString;
+        NSDictionary *params = @{@"uid" : uid,
+                                 @"is_assign_cap" : [NSNumber numberWithBool:YES]};
+        __weak typeof(self) weakSelf = self;
+        
+        [mgr POST:path
+       parameters:params
+          success:^(AFHTTPRequestOperation *operation, id responseObject) {
+              NSNumber *temp = (NSNumber *)[responseObject objectForKey:@"is_ready"];
+              BOOL isReady = [temp boolValue];
+              if (isReady){
+                  NSNumber *result = (NSNumber *)[responseObject objectForKey:@"is_cap"];
+                  BOOL isCap = [result boolValue];
+                  [weakSelf assignRole:isCap];
+                  return;
+                  
+              } else {
+                  [weakSelf assignCapViaServer];
+              }
+              
+          }
+          failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+              NSLog(@"error code: %ld", (long)operation.response.statusCode);
+          }];
+    }
+
 }
 
 /*
@@ -453,7 +488,8 @@
     
     AFHTTPRequestOperationManager *mgr = [AFHTTPRequestOperationManager manager];
     NSString *path = [NSString stringWithFormat:@"%@%@", HOST_NAME, @"ChooseColorServlet"];
-    NSDictionary *params = @{@"is_from_captain" : [NSNumber numberWithBool:NO]};
+    NSDictionary *params = @{@"is_from_captain" : [NSNumber numberWithBool:NO],
+                             @"curr_turn" : [NSNumber numberWithInt:turn]};
     
     __weak typeof(self) weakSelf = self;
     [mgr POST:path
@@ -468,6 +504,7 @@
               NSLog(@"question is color: %d", question);
               
               [weakSelf transitFromWaitForQuestionToAnswerQuestionLayout:[colorID intValue]];
+              return;
               
           } else {
               [weakSelf transitFromNewTurnToWaitForQuestion];
@@ -696,7 +733,8 @@
     
     AFHTTPRequestOperationManager *mgr = [AFHTTPRequestOperationManager manager];
     NSString *uid = [[UIDevice currentDevice] identifierForVendor].UUIDString;
-    NSDictionary *params = @{@"uid" : uid};
+    NSDictionary *params = @{@"uid" : uid,
+                             @"is_assign_cap" : [NSNumber numberWithBool:NO]};
     
     
     __weak typeof(self) weakSelf = self;
